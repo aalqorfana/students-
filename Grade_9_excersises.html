@@ -2,7 +2,11 @@
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c0c1a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>منصة التدريبات الإثرائية — | الصف التاسع</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -185,7 +189,7 @@ body.theme-social .bg-layer::after{background:radial-gradient(circle,rgba(201,15
 .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--burgundy);background:rgba(177,27,73,.1)}
 .form-group input::placeholder{color:rgba(255,255,255,.22)}
 .form-group select option{background:#1a1a2e;color:#fff}
-.start-btn{display:block;margin-top:20px;padding:14px;width:100%;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.08rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.start-btn{display:block;margin-top:20px;padding:14px;width:100%;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.08rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .start-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s}
 .start-btn:hover::after{left:100%}
 .start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(177,27,73,.5)}
@@ -308,7 +312,7 @@ body.theme-social .bg-layer::after{background:radial-gradient(circle,rgba(201,15
 .qtext{font-size:1.13rem;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.85;letter-spacing:.01em}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 @media(max-width:560px){.opts{grid-template-columns:1fr}.qtext{font-size:1.05rem;line-height:1.8}.opt{font-size:.9rem;padding:11px 13px}}
-.opt{display:flex;align-items:center;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;cursor:pointer;gap:11px;font-size:.95rem;color:rgba(255,255,255,.72);transition:all .22s;user-select:none}
+.opt{display:flex;align-items:center;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;cursor:pointer;gap:11px;font-size:.95rem;color:rgba(255,255,255,.72);transition:all .22s;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .opt:hover{border-color:rgba(177,27,73,.45);background:rgba(177,27,73,.08);color:#fff;transform:translateX(-3px)}
 .opt.selected{border-color:var(--gold);background:rgba(201,150,58,.1);color:#fff}
 .opt-radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.18);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s}
@@ -316,7 +320,7 @@ body.theme-social .bg-layer::after{background:radial-gradient(circle,rgba(201,15
 .opt.selected .opt-radio::after{content:'';width:7px;height:7px;background:#fff;border-radius:50%}
 .submit-wrap{text-align:center;margin:28px 0}
 #warn-msg{color:#ff8a80;margin-bottom:12px;display:none;font-weight:700;font-size:.92rem}
-.submit-btn{padding:14px 48px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.05rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:all .3s}
+.submit-btn{padding:14px 48px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.05rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:all .3s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .submit-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(177,27,73,.55)}
 
 /* ===== RESULT SCREEN ===== */
@@ -645,6 +649,325 @@ body.theme-social .bg-layer::after{background:radial-gradient(circle,rgba(201,15
 @media(max-width:560px){
   .qtext img { max-width: 220px; padding: 7px; }
 }
+
+/* ═══════════════════════════════════════════
+   📱 MOBILE-FIRST OPTIMIZATIONS — GRADE 9
+   تحسينات الجوال الشاملة
+═══════════════════════════════════════════ */
+
+/* ── إضافة safe-area للأجهزة ذات الشق (notch) ── */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* ── منع تكبير النص عند تدوير الشاشة ── */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* ── منع اهتزاز التمرير ── */
+html, body { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+
+/* ── شريط العنوان على الجوال ── */
+@media (max-width: 768px) {
+  .top-header { 
+    padding: 20px 16px 16px;
+    padding-top: calc(20px + var(--safe-top));
+  }
+  .top-header h1 { font-size: 1.5rem; line-height: 1.3; }
+  .top-header .sub { font-size: 1rem; padding: 4px 14px; margin-top: 8px; }
+  .header-logo { font-size: 2.6rem; margin-bottom: 4px; }
+  .hbadges { gap: 6px; margin-top: 8px; }
+  .hbadge { font-size: .85rem; padding: 6px 12px; }
+}
+
+/* ── شاشة الدخول ── */
+@media (max-width: 600px) {
+  #entry-screen { margin: 16px auto; padding: 14px; }
+  .entry-card { padding: 24px 18px; border-radius: 20px; }
+  .entry-card h2 { font-size: 1.2rem; }
+  .form-group input, .form-group select { 
+    font-size: 16px !important; /* منع التكبير التلقائي في iOS */
+    padding: 14px 16px; 
+  }
+  .start-btn { 
+    padding: 16px; 
+    font-size: 1.1rem; 
+    border-radius: 16px;
+    min-height: 56px; /* حجم لمس مريح */
+  }
+}
+
+/* ══════════════════════════════════════════
+   📋 شاشة اختيار المادة
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #subject-screen { margin: 16px auto; padding: 14px; }
+  .subjects-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .subj-card { padding: 20px 14px 16px; border-radius: 18px; }
+  .subj-icon { font-size: 2.4rem; margin-bottom: 8px; }
+  .subj-name { font-size: .95rem; }
+  .subj-desc { font-size: .74rem; margin-bottom: 10px; }
+  .subj-enter-btn { padding: 8px 16px; font-size: .82rem; }
+}
+
+@media (max-width: 400px) {
+  .subjects-grid { grid-template-columns: 1fr; gap: 10px; }
+  .subj-card { padding: 18px 16px; }
+}
+
+/* ══════════════════════════════════════════
+   📊 شاشة الوحدات
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #unit-screen { margin: 16px auto; padding: 14px; }
+  .units-grid { grid-template-columns: 1fr; gap: 12px; }
+  .unit-card { padding: 20px 18px; border-radius: 18px; }
+  .unit-icon { font-size: 2.2rem; }
+  .unit-title { font-size: .95rem; }
+  .student-bar { padding: 10px 14px; gap: 10px; }
+  .student-bar .sname { font-size: .9rem; }
+  .sscores { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .score-chip { padding: 4px 10px; font-size: .75rem; }
+  .score-chip strong { font-size: .9rem; }
+  .back-btn { padding: 8px 14px; font-size: .82rem; }
+}
+
+/* ══════════════════════════════════════════
+   🎯 شاشة الاختبار — الأهم
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #quiz-screen { 
+    margin: 0; 
+    padding: 14px 12px;
+    padding-bottom: calc(80px + var(--safe-bottom)); /* مساحة للزر الثابت */
+  }
+
+  /* شريط التقدم */
+  .qprog-wrap { margin-bottom: 14px; }
+  .qprog-label { font-size: .75rem; }
+  
+  /* رأس القسم */
+  .sect-header { 
+    padding: 10px 14px; 
+    border-radius: 10px;
+    margin-top: 16px;
+    gap: 8px;
+  }
+  .sect-header-text { font-size: .88rem; }
+
+  /* بطاقة السؤال */
+  .qcard { 
+    padding: 16px 14px; 
+    border-radius: 14px; 
+    margin-bottom: 10px;
+  }
+  .qnum { 
+    font-size: .78rem; 
+    padding: 4px 12px; 
+    margin-bottom: 10px;
+  }
+
+  /* المقدمة (بيت شعر / جملة) */
+  .qpre { 
+    font-size: 1rem; 
+    padding: 10px 12px; 
+    line-height: 1.85;
+    margin-bottom: 8px;
+    border-right-width: 3px;
+    border-radius: 8px;
+  }
+
+  /* نص السؤال */
+  .qtext { 
+    font-size: 1.02rem; 
+    line-height: 1.75; 
+    margin-bottom: 14px;
+  }
+
+  /* خيارات الإجابة — عمود واحد دائماً على الجوال */
+  .opts { 
+    grid-template-columns: 1fr !important; 
+    gap: 8px; 
+  }
+  .opt { 
+    padding: 13px 14px; 
+    font-size: .97rem;
+    border-radius: 12px;
+    min-height: 52px; /* سهل النقر */
+    gap: 12px;
+    line-height: 1.5;
+  }
+  .opt:hover { transform: none; } /* لا تأثير hover على الجوال */
+  .opt:active { 
+    border-color: var(--gold); 
+    background: rgba(201,150,58,.1);
+    transform: scale(.98);
+  }
+  .opt-radio { 
+    width: 22px; 
+    height: 22px; 
+    flex-shrink: 0;
+  }
+  .opt.selected .opt-radio::after { width: 8px; height: 8px; }
+}
+
+/* ── زر الإرسال ثابت في الأسفل على الجوال ── */
+@media (max-width: 768px) {
+  .submit-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    margin: 0;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + var(--safe-bottom));
+    background: rgba(12,12,26,.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .submit-btn { 
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border-radius: 14px;
+    min-height: 54px;
+  }
+  #warn-msg { 
+    font-size: .8rem; 
+    margin-bottom: 0;
+    flex-shrink: 0;
+    max-width: 120px;
+    text-align: center;
+  }
+}
+
+/* ── شريط الوقت ثابت على الجوال ── */
+@media (max-width: 768px) {
+  #timer-bar { 
+    padding: 8px 14px;
+    padding-top: calc(8px + var(--safe-top));
+    gap: 10px;
+  }
+  #timer-display { font-size: 1.3rem; min-width: 56px; }
+  .tlabel { font-size: .72rem; }
+  .unit-tag { font-size: .72rem; padding: 2px 8px; }
+}
+
+/* ══════════════════════════════════════════
+   🏆 شاشة النتيجة
+══════════════════════════════════════════ */
+@media (max-width: 600px) {
+  #result-screen { margin: 16px auto; padding: 12px; }
+  .rcard { padding: 28px 18px 24px; border-radius: 20px; }
+  .rtrophy { font-size: 3rem; }
+  .rname { font-size: 1.2rem; }
+  .score-circle { width: 130px; height: 130px; }
+  .snum { font-size: 2.2rem; }
+  .meta-chips { gap: 8px; }
+  .mchip { padding: 8px 12px; font-size: .78rem; flex: 1; min-width: 80px; }
+  .mchip strong { font-size: .95rem; }
+  .action-btns { flex-direction: column; gap: 8px; }
+  .abtn { min-width: unset; padding: 14px; font-size: .95rem; min-height: 52px; }
+  .rdetails { padding: 14px; }
+  .drow { font-size: .82rem; }
+}
+
+/* ══════════════════════════════════════════
+   🔍 شاشة المراجعة
+══════════════════════════════════════════ */
+@media (max-width: 600px) {
+  #review-screen { margin: 12px auto; padding: 12px; }
+  .rcard-q { padding: 14px 12px; border-radius: 12px; margin-bottom: 10px; }
+  .rqtext { font-size: .9rem; line-height: 1.75; margin-bottom: 10px; }
+  .ropts { grid-template-columns: 1fr !important; gap: 6px; }
+  .ropt { padding: 8px 10px; font-size: .83rem; border-radius: 9px; }
+  .rev-actions { gap: 8px; flex-direction: column; }
+  .rev-btn { padding: 13px 20px; font-size: .92rem; min-height: 50px; }
+  .rev-title { font-size: 1.1rem; margin-bottom: 14px; }
+}
+
+/* ══════════════════════════════════════════
+   📊 الملخص النهائي
+══════════════════════════════════════════ */
+@media (max-width: 600px) {
+  #final-screen { margin: 16px auto; padding: 12px; }
+  .final-card { padding: 28px 16px; }
+  .fo-circle { width: 110px; height: 110px; }
+  .fo-num { font-size: 2rem; }
+  .ub-item { padding: 12px 14px; gap: 10px; }
+  .ub-icon { font-size: 1.3rem; }
+  .ub-name { font-size: .85rem; }
+  .final-actions { flex-direction: column; }
+  .fa-btn { padding: 14px; min-height: 52px; }
+}
+
+/* ══════════════════════════════════════════
+   📱 تحسينات عامة للجوال
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* تقليل تأثير الخلفية المتحركة على البطارية */
+  .bg-layer::before, .bg-layer::after { 
+    width: 400px; 
+    height: 400px; 
+  }
+  .bg-grid { background-size: 30px 30px; }
+  .floating-particles { display: none; } /* إخفاء الجسيمات لتوفير الأداء */
+  .wave-bg { height: 120px; }
+  
+  /* تحسين الـ breadcrumb */
+  .back-nav { margin-bottom: 16px; }
+  .breadcrumb { font-size: .78rem; }
+
+  /* شاشة الترحيب بالعائد */
+  #resume-screen { margin: 16px auto; padding: 14px; }
+  .resume-card { padding: 20px 16px; }
+  .resume-welcome { font-size: 1.25rem; }
+  .resume-stats-row { gap: 8px; }
+  .resume-stat-val { font-size: 1.3rem; }
+  .resume-btn-primary { padding: 15px; min-height: 54px; }
+  
+  /* مقارنة المحاولات */
+  .cmp-card { padding: 20px 16px; }
+  .cmp-stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .cmp-stat strong { font-size: 1rem; }
+}
+
+/* ── حجم الخط الأدنى للنصوص العربية ── */
+@media (max-width: 400px) {
+  .qtext { font-size: .98rem; }
+  .opt { font-size: .93rem; }
+  .qpre { font-size: .95rem; }
+}
+
+/* ── تعديل hover على الأجهزة التي لا تدعمه بشكل حقيقي ── */
+@media (hover: none) {
+  .opt:hover { 
+    border-color: rgba(255,255,255,.09); 
+    background: rgba(255,255,255,.04); 
+    color: rgba(255,255,255,.72);
+    transform: none;
+  }
+  .subj-card:hover { transform: none; }
+  .unit-card:hover { transform: none; }
+  .start-btn:hover { transform: none; box-shadow: 0 8px 28px rgba(177,27,73,.4); }
+  .abtn:hover { transform: none; }
+}
+
+/* ── منع عرض scrollbar أفقي ── */
+body { overflow-x: hidden; max-width: 100vw; }
+
+/* ── تحسين النصوص الطويلة ── */
+.qtext, .qpre, .opt span { 
+  overflow-wrap: break-word; 
+  word-break: break-word; 
+}
+
 </style>
 </head>
 <body>
@@ -1952,6 +2275,7 @@ function renderQuiz(unit){
   html += `
     <div class="submit-wrap">
       <div id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة أولاً</div>
+      <div id="answer-counter" style="font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:8px;display:none;"></div>
       <button class="submit-btn" onclick="submitQuiz()">✅ إرسال الإجابات</button>
     </div>
   `;
@@ -1992,6 +2316,22 @@ function selectOpt(qi, oi){
 /* ============================================================
    SUBMIT & RESULT
 ============================================================ */
+function updateAnswerCounter() {
+    const counter = document.getElementById('answer-counter');
+    if (!counter) return;
+    const total = currentQs.length;
+    const answered = currentQs.filter(q => answers[q.globalIdx] !== undefined).length;
+    const remaining = total - answered;
+    if (remaining === 0) {
+      counter.textContent = '✅ أجبت على جميع الأسئلة!';
+      counter.style.color = '#69d197';
+    } else {
+      counter.textContent = '📝 أجبت على ' + answered + ' من ' + total + ' • المتبقي: ' + remaining;
+      counter.style.color = 'rgba(255,255,255,.45)';
+    }
+    counter.style.display = 'block';
+  }
+  
 function submitQuiz(){
   const unit = currentUnit;
   const questions = unit.questions || [];
