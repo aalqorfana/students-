@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة التدريبات الإثرائية — | الصف التاسع</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --burgundy:#B11B49;--burgundy-dark:#8a1238;
+  --gold:#C9963A;--gold-light:#FFF2CC;
+  --teal:#0d7377;--teal-light:#14a085;
+  --blue:#1a6b9e;--blue-dark:#0d4f77;
+  --dark:#1a1a2e;--green:#1b8a4a;
+  --danger:#c62828;--warn:#e65100;
+}
+body{font-family:'Cairo',sans-serif;background:#0c0c1a;direction:rtl;min-height:100vh;overflow-x:hidden;transition:background 1.5s ease}
+
+/* ===== ANIMATED BG ===== */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;transition:all 1.2s ease}
+.bg-layer::before{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:var(--orb1-color,radial-gradient(circle,rgba(177,27,73,.13) 0%,transparent 70%));top:-200px;right:-200px;animation:orb1 9s ease-in-out infinite;transition:background 1.2s ease}
+.bg-layer::after{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:var(--orb2-color,radial-gradient(circle,rgba(13,115,119,.10) 0%,transparent 70%));bottom:-200px;left:-200px;animation:orb2 11s ease-in-out infinite;transition:background 1.2s ease}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:40px 40px}
+
+/* ── خلفية إضافية للمادة ── */
+.bg-subject-layer{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.4s ease,background 1.4s ease}
+.bg-subject-layer.active{opacity:1}
+
+/* ── جسيمات عائمة ── */
+.floating-particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:0;animation:floatParticle linear infinite}
+@keyframes floatParticle{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:.6}
+  90%{opacity:.3}
+  100%{transform:translateY(-100px) scale(1.5);opacity:0}
+}
+
+/* ── تأثير shimmer على بطاقات المواد ── */
+@keyframes shimmer{
+  0%{background-position:-400px 0}
+  100%{background-position:400px 0}
+}
+.subj-card::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);
+  background-size:400px 100%;opacity:0;transition:opacity .3s;animation:shimmer 2.4s ease-in-out infinite;pointer-events:none
+}
+.subj-card:hover::after{opacity:1}
+
+/* ── تأثير glow على الأزرار ── */
+@keyframes btnGlow{0%,100%{box-shadow:0 8px 28px rgba(177,27,73,.4)}50%{box-shadow:0 12px 40px rgba(177,27,73,.7),0 0 60px rgba(177,27,73,.2)}}
+.start-btn{animation:btnGlow 3s ease-in-out infinite}
+.start-btn:hover{animation:none}
+
+/* ── نجمة متحركة للترحيب ── */
+@keyframes starFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  33%{transform:translateY(-8px) rotate(5deg)}
+  66%{transform:translateY(4px) rotate(-3deg)}
+}
+.header-logo{animation:starFloat 4s ease-in-out infinite !important}
+
+/* ── تأثير entry card ── */
+.entry-card{animation:fadeInUp .7s cubic-bezier(.23,1,.32,1) both}
+@keyframes cardEntrance{
+  from{opacity:0;transform:scale(.92) translateY(24px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+
+/* ── موجة في خلفية الشاشة الرئيسية ── */
+.wave-bg{position:fixed;bottom:0;left:0;width:100%;height:200px;z-index:0;pointer-events:none;opacity:.15}
+.wave-bg svg{width:100%;height:100%;animation:waveDrift 12s ease-in-out infinite alternate}
+@keyframes waveDrift{from{transform:scaleX(1) scaleY(1)}to{transform:scaleX(1.05) scaleY(1.2)}}
+
+/* ── أيقونات المادة تنبض ── */
+@keyframes iconPulseSubj{
+  0%,100%{transform:scale(1) rotate(0deg)}
+  50%{transform:scale(1.12) rotate(3deg)}
+}
+.subj-icon-el{display:inline-block;animation:iconPulseSubj 3s ease-in-out infinite}
+.subj-card:hover .subj-icon-el{animation:none;transform:scale(1.2)}
+
+/* ── تدرج حسب المادة للشريط العلوي ── */
+.top-header{transition:background 1.2s ease,border-color 1.2s ease}
+@keyframes orb1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,50px) scale(1.12)}}
+@keyframes orb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,-40px) scale(1.1)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes trophy{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(6deg) scale(1.12)}}
+@keyframes starPop{0%{transform:scale(0) rotate(0)}70%{transform:scale(1.3) rotate(200deg)}100%{transform:scale(1) rotate(360deg)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(177,27,73,.4)}50%{box-shadow:0 0 0 18px rgba(177,27,73,0)}}
+@keyframes slideRight{from{transform:translateX(10px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+/* ── ثيمات المواد على body ── */
+body.theme-science .bg-layer::before{background:radial-gradient(circle,rgba(177,27,73,.16) 0%,transparent 70%)}
+body.theme-science .bg-layer::after{background:radial-gradient(circle,rgba(13,115,119,.12) 0%,transparent 70%)}
+body.theme-math .bg-layer::before{background:radial-gradient(circle,rgba(13,115,119,.2) 0%,transparent 70%)}
+body.theme-math .bg-layer::after{background:radial-gradient(circle,rgba(20,160,133,.14) 0%,transparent 70%)}
+body.theme-islamic .bg-layer::before{background:radial-gradient(circle,rgba(27,94,32,.22) 0%,transparent 70%)}
+body.theme-islamic .bg-layer::after{background:radial-gradient(circle,rgba(201,150,58,.1) 0%,transparent 70%)}
+body.theme-arabic .bg-layer::before{background:radial-gradient(circle,rgba(74,20,140,.24) 0%,transparent 70%)}
+body.theme-arabic .bg-layer::after{background:radial-gradient(circle,rgba(123,31,162,.16) 0%,transparent 70%)}
+body.theme-english .bg-layer::before{background:radial-gradient(circle,rgba(26,107,158,.22) 0%,transparent 70%)}
+body.theme-english .bg-layer::after{background:radial-gradient(circle,rgba(13,79,119,.14) 0%,transparent 70%)}
+body.theme-social .bg-layer::before{background:radial-gradient(circle,rgba(230,81,0,.22) 0%,transparent 70%)}
+body.theme-social .bg-layer::after{background:radial-gradient(circle,rgba(201,150,58,.12) 0%,transparent 70%)}
+
+/* ── تأثير نبض على بطاقة التسجيل ── */
+.entry-card{position:relative;overflow:hidden}
+.entry-card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(177,27,73,.05),rgba(13,115,119,.05));
+  opacity:0;animation:cardPulse 4s ease-in-out infinite;pointer-events:none
+}
+@keyframes cardPulse{0%,100%{opacity:0}50%{opacity:1}}
+
+/* ── تحسين الأيقونات العائمة ── */
+.subj-icon-el{display:block;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.subj-card:hover .subj-icon-el{transform:scale(1.25) rotate(8deg) !important;animation:none !important}
+
+/* ── خط تقدم ملوّن حسب المادة ── */
+.tfill{transition:width .4s ease, background .8s ease}
+
+/* ── تأثير بريق على زر الدخول ── */
+@keyframes shine{
+  0%{left:-100%}100%{left:200%}
+}
+.start-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  animation:shine 2.5s ease-in-out 1.5s infinite;
+}
+
+
+/* ===== HEADER ===== */
+.top-header{position:relative;z-index:10;padding:30px 20px 22px;text-align:center;border-bottom:1px solid rgba(177,27,73,.25);background:linear-gradient(180deg,rgba(177,27,73,.12) 0%,transparent 100%)}
+.header-logo{font-size:3.5rem;display:block;margin-bottom:6px;filter:drop-shadow(0 0 20px rgba(177,27,73,.6))}
+.top-header h1{font-size:2.2rem;font-weight:900;color:#fff;letter-spacing:.3px}
+.top-header .sub {
+    color: #C9963A; /* اللون الذهبي */
+    font-size: 1.3rem; /* تكبير الخط */
+    font-weight: 800;
+    margin-top: 12px;
+    display: inline-block;
+    border: 2px solid rgba(201,150,58,0.4); /* إطار ذهبي خفيف */
+    padding: 5px 20px;
+    border-radius: 25px;
+    background: rgba(201,150,58,0.1); /* خلفية خفيفة للاسم */
+}
+.hbadges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hbadge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:8px 18px;font-size:1.1rem;color:rgba(255,255,255,.9)}
+.hbadge.gold{background:linear-gradient(135deg,rgba(201,150,58,.25),rgba(177,27,73,.15));border-color:rgba(201,150,58,.35);color:#f5c97a}
+
+/* ===== TIMER BAR ===== */
+#timer-bar{position:sticky;top:0;z-index:100;background:rgba(12,12,26,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(177,27,73,.25);padding:9px 20px;display:none;align-items:center;gap:14px}
+#timer-bar.show{display:flex}
+.tlabel{font-size:.8rem;color:rgba(255,255,255,.45);white-space:nowrap}
+#timer-display{font-size:1.5rem;font-weight:900;color:var(--gold);min-width:65px;text-align:center;direction:ltr;font-variant-numeric:tabular-nums}
+#timer-display.warn{color:var(--warn);animation:pulse .8s infinite}
+#timer-display.danger{color:var(--danger);animation:pulse .4s infinite}
+.tprogress{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;min-width:80px}
+.tfill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width 1s linear,background .5s}
+.tfill.warn{background:linear-gradient(90deg,var(--gold),var(--warn))}
+.tfill.danger{background:linear-gradient(90deg,var(--warn),var(--danger))}
+.unit-tag{background:rgba(177,27,73,.2);border:1px solid rgba(177,27,73,.35);border-radius:10px;padding:3px 12px;font-size:.78rem;color:rgba(255,255,255,.7);white-space:nowrap}
+
+/* ===== SCREENS ===== */
+.screen{display:none;position:relative;z-index:10}
+.screen.active{display:block}
+
+/* ===== ENTRY SCREEN ===== */
+#entry-screen{max-width:520px;margin:38px auto;padding:20px;animation:fadeInUp .6s ease}
+.entry-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:34px 30px;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.07)}
+.entry-card h2{color:#fff;font-size:1.45rem;font-weight:800;margin-bottom:6px;text-align:center}
+.entry-card>.sub{color:rgba(255,255,255,.45);text-align:center;font-size:.88rem;margin-bottom:22px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.83rem;font-weight:700;color:rgba(255,255,255,.55);margin-bottom:7px}
+.form-group input,.form-group select{width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:12px;font-family:'Cairo',sans-serif;font-size:.97rem;color:#fff;direction:rtl;transition:border-color .3s,background .3s;-webkit-appearance:none}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--burgundy);background:rgba(177,27,73,.1)}
+.form-group input::placeholder{color:rgba(255,255,255,.22)}
+.form-group select option{background:#1a1a2e;color:#fff}
+.start-btn{display:block;margin-top:20px;padding:14px;width:100%;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.08rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.start-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s}
+.start-btn:hover::after{left:100%}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(177,27,73,.5)}
+
+/* ===== SUBJECT SCREEN ===== */
+#subject-screen{max-width:960px;margin:30px auto;padding:20px;animation:fadeInUp .5s ease;position:relative;z-index:10}
+.subj-screen-title{text-align:center;margin-bottom:28px}
+.subj-screen-title h2{color:#fff;font-size:1.55rem;font-weight:900;margin-bottom:6px}
+.subj-screen-title p{color:rgba(255,255,255,.45);font-size:.9rem}
+.subjects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-bottom:24px}
+
+.subj-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:22px;padding:28px 22px 22px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-align:center}
+.subj-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .35s;background:var(--subj-grad)}
+.subj-card{position:relative;overflow:hidden}.subj-card:hover{transform:translateY(-6px)}
+.subj-card:hover::before{opacity:1}
+.subj-card:hover{border-color:var(--subj-clr);box-shadow:0 16px 48px var(--subj-shadow)}
+
+/* المادة: متوفرة */
+.subj-card.available .subj-icon{filter:drop-shadow(0 0 16px var(--subj-clr))}
+/* المادة: قريباً */
+.subj-card.coming-soon{opacity:.55;cursor:not-allowed}
+.subj-card.coming-soon:hover{transform:none;box-shadow:none}
+.subj-card.coming-soon::before{display:none}
+.coming-label{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:3px 10px;font-size:.72rem;color:rgba(255,255,255,.55)}
+/* المادة: مكتملة (لها محاولات) */
+.subj-card.has-attempts .subj-done-badge{display:flex}
+.subj-done-badge{display:none;position:absolute;top:14px;right:14px;background:rgba(27,138,74,.3);border:1px solid rgba(27,138,74,.5);border-radius:10px;padding:3px 10px;font-size:.73rem;color:#81c784;font-weight:700;align-items:center;gap:4px}
+
+.subj-icon{font-size:3.2rem;margin-bottom:12px;display:block;position:relative}
+.subj-name{font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:5px}
+.subj-desc{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:16px;line-height:1.5}
+.subj-stats{display:flex;justify-content:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.subj-stat{font-size:.75rem;color:rgba(255,255,255,.45);background:rgba(255,255,255,.05);border-radius:8px;padding:4px 10px}
+.subj-enter-btn{display:inline-block;padding:9px 26px;border-radius:11px;font-family:'Cairo',sans-serif;font-size:.9rem;font-weight:700;border:1px solid var(--subj-clr);background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);cursor:pointer;transition:all .25s;position:relative}
+.subj-card:hover .subj-enter-btn{background:var(--subj-clr);color:#fff;transform:scale(1.04)}
+.subj-best-score{margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.35)}
+.subj-best-score span{color:#f5c97a;font-weight:700}
+
+/* breadcrumb / back nav */
+.back-nav{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.back-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:11px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:700;color:rgba(255,255,255,.65);transition:all .25s}
+.back-btn:hover{background:rgba(255,255,255,.11);color:#fff}
+.breadcrumb{font-size:.83rem;color:rgba(255,255,255,.35)}
+.breadcrumb span{color:rgba(255,255,255,.65);font-weight:700}
+
+/* overall progress on subject screen */
+.subj-overall{background:linear-gradient(135deg,rgba(201,150,58,.1),rgba(177,27,73,.07));border:1px solid rgba(201,150,58,.22);border-radius:16px;padding:16px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:6px}
+.so-label{font-size:.85rem;color:rgba(255,255,255,.55)}
+.so-bar-wrap{flex:1;min-width:100px}
+.so-bar{background:rgba(255,255,255,.08);border-radius:6px;height:7px;overflow:hidden}
+.so-fill{height:100%;background:linear-gradient(90deg,var(--burgundy),var(--gold));border-radius:6px;transition:width .8s ease}
+.so-pct{font-size:1rem;font-weight:800;color:#f5c97a}
+.so-detail{font-size:.8rem;color:rgba(255,255,255,.35)}
+
+#unit-screen{max-width:800px;margin:30px auto;padding:20px;animation:fadeInUp .5s ease}
+.unit-screen-title{text-align:center;margin-bottom:28px}
+.unit-screen-title h2{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.unit-screen-title p{color:rgba(255,255,255,.45);font-size:.9rem}
+.student-bar{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.student-bar .sname{font-size:1rem;font-weight:700;color:#fff}
+.student-bar .smeta{font-size:.83rem;color:rgba(255,255,255,.45)}
+.student-bar .sscores{margin-right:auto;display:flex;gap:10px;flex-wrap:wrap}
+.score-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:5px 12px;font-size:.8rem;color:rgba(255,255,255,.6);text-align:center}
+.score-chip.done{border-color:rgba(27,138,74,.4);background:rgba(27,138,74,.1);color:#81c784}
+.score-chip strong{display:block;font-size:1rem;color:#fff;margin-bottom:1px}
+.score-chip.done strong{color:#81c784}
+
+.units-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.unit-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:20px;padding:26px 22px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-align:center}
+.unit-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s}
+.unit-card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.2)}
+.unit-card:hover::before{opacity:1}
+
+.unit-card.u1::before{background:linear-gradient(135deg,rgba(177,27,73,.15),rgba(177,27,73,.05))}
+.unit-card.u1:hover{border-color:rgba(177,27,73,.5);box-shadow:0 12px 40px rgba(177,27,73,.2)}
+.unit-card.u2::before{background:linear-gradient(135deg,rgba(13,115,119,.15),rgba(13,115,119,.05))}
+.unit-card.u2:hover{border-color:rgba(13,115,119,.5);box-shadow:0 12px 40px rgba(13,115,119,.2)}
+.unit-card.u3::before{background:linear-gradient(135deg,rgba(26,107,158,.15),rgba(26,107,158,.05))}
+.unit-card.u3:hover{border-color:rgba(26,107,158,.5);box-shadow:0 12px 40px rgba(26,107,158,.2)}
+
+.unit-card.completed{border-color:rgba(27,138,74,.35);background:rgba(27,138,74,.05)}
+.unit-card.completed::after{content:'✓';position:absolute;top:12px;left:14px;background:var(--green);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.unit-icon{font-size:2.8rem;margin-bottom:12px;display:block;filter:drop-shadow(0 0 12px currentColor)}
+.unit-card.u1 .unit-icon{filter:drop-shadow(0 0 12px rgba(177,27,73,.6))}
+.unit-card.u2 .unit-icon{filter:drop-shadow(0 0 12px rgba(13,115,119,.6))}
+.unit-card.u3 .unit-icon{filter:drop-shadow(0 0 12px rgba(26,107,158,.6))}
+.unit-num{font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:4px}
+.unit-title{font-size:1rem;font-weight:800;color:#fff;margin-bottom:6px;line-height:1.4}
+.unit-meta{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:14px}
+.unit-start-btn{display:inline-block;padding:8px 22px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.88rem;font-weight:700;border:none;cursor:pointer;transition:all .25s}
+.unit-card.u1 .unit-start-btn{background:rgba(177,27,73,.25);color:#f48fb1;border:1px solid rgba(177,27,73,.4)}
+.unit-card.u2 .unit-start-btn{background:rgba(13,115,119,.25);color:#80deea;border:1px solid rgba(13,115,119,.4)}
+.unit-card.u3 .unit-start-btn{background:rgba(26,107,158,.25);color:#90caf9;border:1px solid rgba(26,107,158,.4)}
+.unit-card:hover .unit-start-btn{transform:scale(1.05)}
+.unit-score-badge{position:absolute;top:12px;left:14px;background:rgba(27,138,74,.3);border:1px solid rgba(27,138,74,.5);color:#81c784;border-radius:10px;padding:3px 10px;font-size:.75rem;font-weight:700}
+
+/* Overall summary bar */
+.overall-bar{background:linear-gradient(135deg,rgba(201,150,58,.12),rgba(177,27,73,.08));border:1px solid rgba(201,150,58,.25);border-radius:16px;padding:16px 22px;margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.overall-bar .ob-label{font-size:.88rem;color:rgba(255,255,255,.6)}
+.overall-bar .ob-score{font-size:1.4rem;font-weight:900;color:var(--gold)}
+.overall-bar .ob-bar{flex:1;min-width:120px;height:8px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.overall-bar .ob-fill{height:100%;background:linear-gradient(90deg,var(--burgundy),var(--gold));border-radius:10px;transition:width .8s ease}
+.overall-bar .ob-pct{font-size:1rem;font-weight:800;color:#f5c97a}
+
+/* ===== QUIZ SCREEN ===== */
+#quiz-screen{max-width:860px;margin:20px auto;padding:20px;display:none;position:relative;z-index:10}
+.qprog-wrap{margin-bottom:20px}
+.qprog-label{display:flex;justify-content:space-between;font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:6px}
+.qprog-bar{background:rgba(255,255,255,.06);border-radius:6px;height:6px;overflow:hidden}
+.qprog-fill{height:100%;background:linear-gradient(90deg,var(--burgundy),var(--gold));border-radius:6px;transition:width .4s ease}
+.sect-header{display:flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;margin-bottom:14px;margin-top:22px}
+.sect-header:first-of-type{margin-top:0}
+.sect-header-icon{font-size:1.2rem}
+.sect-header-text{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.85)}
+.sect-header-count{margin-right:auto;background:rgba(177,27,73,.2);color:rgba(255,255,255,.6);border-radius:20px;padding:2px 10px;font-size:.75rem}
+.qcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:22px;margin-bottom:14px;transition:border-color .3s,background .3s;animation:slideRight .35s ease both}
+.qcard.answered{border-color:rgba(27,138,74,.35);background:rgba(27,138,74,.04)}
+.qnum{display:inline-block;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;padding:4px 14px;border-radius:20px;font-size:.82rem;font-weight:800;margin-bottom:14px;letter-spacing:.02em}
+.qtext{font-size:1.13rem;font-weight:700;color:#fff;margin-bottom:18px;line-height:1.85;letter-spacing:.01em}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:560px){.opts{grid-template-columns:1fr}.qtext{font-size:1.05rem;line-height:1.8}.opt{font-size:.9rem;padding:11px 13px}}
+.opt{display:flex;align-items:center;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;cursor:pointer;gap:11px;font-size:.95rem;color:rgba(255,255,255,.72);transition:all .22s;user-select:none}
+.opt:hover{border-color:rgba(177,27,73,.45);background:rgba(177,27,73,.08);color:#fff;transform:translateX(-3px)}
+.opt.selected{border-color:var(--gold);background:rgba(201,150,58,.1);color:#fff}
+.opt-radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.18);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s}
+.opt.selected .opt-radio{border-color:var(--gold);background:var(--gold)}
+.opt.selected .opt-radio::after{content:'';width:7px;height:7px;background:#fff;border-radius:50%}
+.submit-wrap{text-align:center;margin:28px 0}
+#warn-msg{color:#ff8a80;margin-bottom:12px;display:none;font-weight:700;font-size:.92rem}
+.submit-btn{padding:14px 48px;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.05rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:all .3s}
+.submit-btn:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(177,27,73,.55)}
+
+/* ===== RESULT SCREEN ===== */
+#result-screen{max-width:620px;margin:36px auto;padding:20px;display:none;position:relative;z-index:10}
+.rcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:26px;padding:44px 34px 38px;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center;animation:scaleIn .5s cubic-bezier(.34,1.56,.64,1)}
+.rtrophy{font-size:3.8rem;display:block;margin-bottom:6px}
+.rtrophy.spin{animation:trophy 2s ease-in-out infinite}
+.rname{font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:3px}
+.rinfo{font-size:.82rem;color:rgba(255,255,255,.38);margin-bottom:22px}
+.score-wrap{position:relative;display:inline-block;margin:0 auto 20px}
+.score-circle{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,var(--burgundy),var(--gold));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(177,27,73,.15),0 12px 36px rgba(177,27,73,.4);animation:glowPulse 2.5s ease-in-out infinite}
+.snum{font-size:2.8rem;font-weight:900;color:#fff;line-height:1}
+.sout{font-size:.86rem;color:rgba(255,255,255,.75)}
+.spct{position:absolute;bottom:-8px;right:-10px;background:var(--gold);color:#1a1a2e;font-weight:900;font-size:.85rem;border-radius:12px;padding:4px 12px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.stars-row{display:flex;justify-content:center;gap:5px;margin:14px 0 4px}
+.star{font-size:1.4rem;opacity:0;display:inline-block}
+.star.lit{animation:starPop .5s ease forwards}
+.ach-banner{border-radius:14px;padding:18px;margin:16px 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
+.ach-banner::before{content:'';position:absolute;inset:0;background:var(--bg)}
+.ach-emoji{font-size:2.2rem;display:block;margin-bottom:6px;position:relative}
+.ach-title{font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:5px;position:relative}
+.ach-text{font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.7;position:relative}
+.meta-chips{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0}
+.mchip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:9px 14px;font-size:.82rem;color:rgba(255,255,255,.6);text-align:center}
+.mchip strong{display:block;font-size:1.05rem;color:#fff;margin-bottom:2px}
+.rdetails{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-top:16px;text-align:right}
+.rdetails h3{color:var(--gold);margin-bottom:12px;font-size:.9rem;font-weight:700;text-align:center}
+.drow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:rgba(255,255,255,.45);align-items:center}
+.drow:last-child{border:none}
+.dlbl{color:rgba(255,255,255,.65)}
+.dc{color:#69d197;font-weight:700}.dc-r{color:#ff8a80;font-weight:700}.dc-y{color:#f5c97a;font-weight:700}
+.action-btns{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.abtn{flex:1;min-width:130px;padding:13px 16px;font-family:'Cairo',sans-serif;font-size:.93rem;font-weight:700;border:none;border-radius:13px;cursor:pointer;transition:all .3s}
+.abtn-review{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 6px 18px rgba(13,79,119,.4)}
+.abtn-review:hover{transform:translateY(-2px)}
+.abtn-retry{background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;box-shadow:0 6px 18px rgba(177,27,73,.35)}
+.abtn-retry:hover{transform:translateY(-2px)}
+.abtn-home{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.8)}
+.abtn-home:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+
+/* ===== REVIEW SCREEN ===== */
+#review-screen{max-width:860px;margin:20px auto;padding:20px;display:none;position:relative;z-index:10}
+.rev-title{text-align:center;color:#5db3e0;margin-bottom:20px;font-size:1.3rem;font-weight:800}
+.rev-sect-hdr{background:rgba(26,107,158,.15);border:1px solid rgba(26,107,158,.25);color:rgba(255,255,255,.85);padding:11px 18px;border-radius:11px;margin-bottom:12px;margin-top:20px;font-size:.93rem;font-weight:700}
+.rev-sect-hdr:first-of-type{margin-top:0}
+.rcard-q{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;margin-bottom:12px}
+.rcard-q.correct{border-right:4px solid #2e7d32;background:rgba(46,125,50,.05)}
+.rcard-q.wrong  {border-right:4px solid #c62828;background:rgba(198,40,40,.05)}
+.rcard-q.skipped{border-right:4px solid #666}
+.rlabel{display:inline-block;padding:3px 13px;border-radius:20px;font-size:.77rem;font-weight:700;margin-bottom:10px}
+.correct .rlabel{background:rgba(46,125,50,.25);color:#81c784}
+.wrong .rlabel  {background:rgba(198,40,40,.25);color:#ef9a9a}
+.skipped .rlabel{background:rgba(100,100,100,.25);color:#aaa}
+.rqtext{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:12px;line-height:1.8}
+.ropts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+@media(max-width:560px){.ropts{grid-template-columns:1fr}}
+.ropt{display:flex;align-items:center;padding:9px 12px;border:1px solid rgba(255,255,255,.07);border-radius:10px;font-size:.86rem;color:rgba(255,255,255,.5);gap:8px}
+.ropt.co{border-color:#2e7d32;background:rgba(46,125,50,.14);font-weight:700;color:#a5d6a7}
+.ropt.wo{border-color:#c62828;background:rgba(198,40,40,.1);font-weight:700;color:#ef9a9a}
+.oicon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0}
+.co .oicon{background:#2e7d32;color:#fff}.wo .oicon{background:#c62828;color:#fff}
+.rnote{font-size:.8rem;margin-top:10px;padding:8px 12px;border-radius:9px}
+.rnote.c{background:rgba(46,125,50,.1);color:#a5d6a7}
+.rnote.w{background:rgba(255,152,0,.1);color:#ffcc80}
+.rev-actions{text-align:center;margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.rev-btn{padding:12px 30px;font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;border:none;border-radius:13px;cursor:pointer;transition:all .3s}
+.rev-btn.back{background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;box-shadow:0 6px 18px rgba(177,27,73,.35)}
+.rev-btn.home{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
+.rev-btn.retry{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff}
+.rev-btn:hover{transform:translateY(-2px)}
+
+/* ===== FINAL SUMMARY ===== */
+#final-screen{max-width:660px;margin:36px auto;padding:20px;display:none;position:relative;z-index:10}
+.final-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:44px 34px;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .6s cubic-bezier(.34,1.56,.64,1)}
+.final-title{text-align:center;margin-bottom:28px}
+.final-title .fi{font-size:3.5rem;display:block;animation:trophy 2s ease-in-out infinite}
+.final-title h2{font-size:1.5rem;font-weight:900;color:#fff;margin-top:8px}
+.final-title p{color:rgba(255,255,255,.45);font-size:.88rem;margin-top:5px}
+.final-overview{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+.fo-circle{width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,var(--burgundy),var(--gold));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(177,27,73,.12),0 12px 36px rgba(177,27,73,.4);animation:glowPulse 2.5s ease-in-out infinite}
+.fo-num{font-size:2.4rem;font-weight:900;color:#fff;line-height:1}
+.fo-lbl{font-size:.8rem;color:rgba(255,255,255,.75)}
+.fo-info{text-align:right}
+.fo-name{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:3px}
+.fo-sub{font-size:.83rem;color:rgba(255,255,255,.4);margin-bottom:12px}
+.fo-stars{display:flex;gap:4px}
+.fo-stars .star{font-size:1.2rem}
+.units-breakdown{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.ub-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:14px}
+.ub-icon{font-size:1.6rem;flex-shrink:0}
+.ub-info{flex:1}
+.ub-name{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:4px}
+.ub-bar{background:rgba(255,255,255,.08);border-radius:6px;height:7px;overflow:hidden;margin-bottom:3px}
+.ub-fill{height:100%;border-radius:6px;transition:width 1s ease}
+.ub-meta{font-size:.78rem;color:rgba(255,255,255,.4)}
+.ub-score{font-size:1.1rem;font-weight:800;flex-shrink:0}
+.final-msg{background:rgba(201,150,58,.08);border:1px solid rgba(201,150,58,.2);border-radius:14px;padding:18px;text-align:center;margin-bottom:22px}
+.final-msg .fm-emoji{font-size:2rem;display:block;margin-bottom:6px}
+.final-msg .fm-title{font-size:1.05rem;font-weight:800;color:#f5c97a;margin-bottom:5px}
+.final-msg .fm-text{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.7}
+.final-actions{display:flex;gap:10px;flex-wrap:wrap}
+.fa-btn{flex:1;min-width:140px;padding:13px;font-family:'Cairo',sans-serif;font-size:.93rem;font-weight:700;border:none;border-radius:13px;cursor:pointer;transition:all .3s}
+.fa-btn.home{background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;box-shadow:0 6px 18px rgba(177,27,73,.35)}
+.fa-btn.restart{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.8)}
+.fa-btn:hover{transform:translateY(-2px)}
+
+/* ===== SAVING ===== */
+#saving-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(10px)}
+#saving-overlay.show{display:flex}
+.sbox{background:rgba(18,18,38,.97);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:42px 48px;text-align:center;max-width:320px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.sbox h3{color:#fff;margin-bottom:8px;font-size:1.05rem}
+.sbox p{color:rgba(255,255,255,.4);font-size:.88rem;margin-top:8px}
+.spinner{width:48px;height:48px;border:3px solid rgba(177,27,73,.2);border-top-color:var(--burgundy);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+.serr{color:#ff8a80;font-size:.83rem;margin-top:10px;display:none}
+.sretrybtn{margin-top:12px;padding:9px 26px;background:var(--burgundy);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;display:none}
+
+/* confetti */
+.confetti-piece{position:fixed;width:8px;height:14px;top:-20px;opacity:0;animation:confettiFall linear forwards;z-index:9998;pointer-events:none;border-radius:2px}
+
+/* ===== HISTORY PANEL ===== */
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes barGrow{from{width:0}to{width:var(--w)}}
+.hist-toggle{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:.83rem;font-weight:700;color:rgba(255,255,255,.65);transition:all .25s;margin-top:10px;width:100%}
+.hist-toggle:hover{background:rgba(255,255,255,.09);color:#fff}
+.hist-toggle .ht-arrow{margin-right:auto;transition:transform .3s;font-size:.7rem}
+.hist-toggle.open .ht-arrow{transform:rotate(180deg)}
+.hist-panel{display:none;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;margin-top:8px;animation:slideDown .3s ease}
+.hist-panel.show{display:block}
+.hist-empty{text-align:center;color:rgba(255,255,255,.3);font-size:.83rem;padding:16px}
+.hist-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.hist-table th{color:rgba(255,255,255,.4);font-weight:600;padding:6px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07)}
+.hist-table td{padding:7px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.65)}
+.hist-table tr:last-child td{border:none}
+.hist-table .h-best{color:#f5c97a;font-weight:700}
+.hist-table .h-latest{color:#90caf9;font-weight:700}
+.hist-pct{display:inline-block;padding:2px 8px;border-radius:8px;font-weight:700;font-size:.8rem}
+.hist-pct.high{background:rgba(105,209,151,.15);color:#69d197}
+.hist-pct.mid{background:rgba(245,201,122,.12);color:#f5c97a}
+.hist-pct.low{background:rgba(255,138,128,.12);color:#ff8a80}
+.hist-trend{font-size:.9rem}
+.hist-chart{margin-top:14px}
+.hist-chart-title{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:10px;text-align:center}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .8s ease;position:relative;cursor:default}
+.chart-bar:hover::after{content:attr(data-tip);position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;font-size:.72rem;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none}
+.chart-bar-lbl{font-size:.68rem;color:rgba(255,255,255,.35);text-align:center}
+.chart-ref-line{border-top:1px dashed rgba(255,255,255,.1);margin:0 4px 4px}
+
+/* history panel in unit card */
+.unit-hist-strip{margin-top:10px;background:rgba(255,255,255,.04);border-radius:10px;padding:8px 10px}
+.uhs-row{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;margin-bottom:3px}
+.uhs-row:last-child{margin:0}
+.uhs-lbl{color:rgba(255,255,255,.35)}
+.uhs-val{font-weight:700}
+
+/* comparison modal */
+#compare-modal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:20px}
+#compare-modal.show{display:flex}
+.cmp-card{background:rgba(18,18,38,.97);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:30px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.cmp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.cmp-header h3{font-size:1.1rem;font-weight:800;color:#fff}
+.cmp-close{background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cmp-close:hover{background:rgba(177,27,73,.3);color:#fff}
+.cmp-unit-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.cmp-tab{padding:7px 16px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);cursor:pointer;font-family:'Cairo',sans-serif;font-size:.83rem;font-weight:700;transition:all .25s}
+.cmp-tab.active{background:rgba(177,27,73,.25);border-color:rgba(177,27,73,.5);color:#fff}
+.cmp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.cmp-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px;text-align:center}
+.cmp-stat strong{display:block;font-size:1.2rem;color:#fff;margin-bottom:2px}
+.cmp-stat span{font-size:.75rem;color:rgba(255,255,255,.4)}
+.cmp-attempts{display:flex;flex-direction:column;gap:8px}
+.cmp-attempt{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px}
+.cmp-attempt.best{border-color:rgba(201,150,58,.35);background:rgba(201,150,58,.05)}
+.cmp-attempt.latest{border-color:rgba(144,202,249,.25);background:rgba(144,202,249,.04)}
+.ca-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.best .ca-num{background:rgba(201,150,58,.3);color:#f5c97a}
+.latest .ca-num{background:rgba(144,202,249,.2);color:#90caf9}
+.ca-info{flex:1}
+.ca-score{font-size:.9rem;font-weight:700;color:#fff}
+.ca-meta{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:2px}
+.ca-bar{width:80px;flex-shrink:0}
+.ca-bar-track{background:rgba(255,255,255,.08);border-radius:4px;height:6px;overflow:hidden}
+.ca-bar-fill{height:100%;border-radius:4px;transition:width .8s ease}
+.ca-pct{font-size:.78rem;font-weight:700;text-align:left;margin-top:3px}
+.cmp-chart{margin-top:18px}
+.cmp-chart-title{font-size:.83rem;color:rgba(255,255,255,.45);margin-bottom:12px}
+.line-chart-wrap{position:relative;height:120px;margin-bottom:6px}
+.line-chart-svg{width:100%;height:100%}
+.cmp-improve{text-align:center;padding:10px;border-radius:10px;font-size:.85rem;font-weight:700;margin-top:14px}
+.cmp-improve.up{background:rgba(105,209,151,.1);color:#69d197}
+.cmp-improve.same{background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+.cmp-improve.down{background:rgba(255,138,128,.1);color:#ff8a80}
+
+/* ── English LTR question support ── */
+.question-block.ltr-q,
+.question-block.ltr-q .qtext,
+.question-block.ltr-q .section-label {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'Segoe UI', 'Cairo', sans-serif;
+}
+.question-block.ltr-q .opt {
+  direction: ltr !important;
+  text-align: left !important;
+}
+.question-block.ltr-q .opt-label {
+  margin-left: 0;
+  margin-right: 10px;
+}
+/* quiz screen LTR override for English */
+.english-quiz .qtext { direction: ltr; text-align: left; }
+.english-quiz .opt   { direction: ltr; text-align: left; }
+.english-quiz .section-label { direction: ltr; text-align: left; }
+
+/* ── Reading Passage Block ── */
+.passage-block {
+  background: rgba(20, 84, 122, 0.18);
+  border: 1px solid rgba(26, 107, 158, 0.35);
+  border-right: 4px solid #1a6b9e;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  direction: ltr;
+  text-align: left;
+  position: relative;
+}
+.passage-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(26,107,158,.3);
+  color: #81d4fa;
+  font-size: .78rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.passage-text {
+  font-size: .97rem;
+  line-height: 1.95;
+  color: rgba(255,255,255,.82);
+  direction: ltr;
+  text-align: left;
+  white-space: pre-line;
+}
+.passage-text p {
+  margin-bottom: 10px;
+}
+/* collapse/expand لتوفير المساحة على الجوال */
+.passage-toggle {
+  display: none;
+  margin-top: 12px;
+  background: none;
+  border: 1px solid rgba(26,107,158,.4);
+  color: #81d4fa;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+}
+@media(max-width: 640px) {
+  .passage-text { font-size: .9rem; line-height: 1.85; }
+  .passage-block { padding: 15px 16px; }
+  .passage-toggle { display: inline-block; }
+  .passage-text.collapsed {
+    max-height: 120px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+}
+/* لازم تكون الأسئلة مميزة بوضوح */
+.reading-qcard {
+  border-right: 3px solid rgba(26,107,158,.5) !important;
+}
+
+/* ══ شاشة الترحيب بالعائد ══ */
+#resume-screen{max-width:520px;margin:30px auto;padding:20px;animation:fadeInUp .55s ease}
+.resume-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:28px 24px;backdrop-filter:blur(12px)}
+.resume-avatar{font-size:3.2rem;text-align:center;margin-bottom:6px;filter:drop-shadow(0 0 18px rgba(201,150,58,.5))}
+.resume-welcome{text-align:center;font-size:1.45rem;font-weight:900;color:#fff;margin-bottom:4px}
+.resume-sub{text-align:center;font-size:.9rem;color:rgba(255,255,255,.45);margin-bottom:20px}
+.resume-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.resume-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 8px;text-align:center}
+.resume-stat-val{font-size:1.55rem;font-weight:900;color:var(--gold)}
+.resume-stat-label{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px}
+.resume-progress-bar{background:rgba(255,255,255,.06);border-radius:8px;height:10px;margin-bottom:6px;overflow:hidden}
+.resume-progress-fill{height:100%;background:linear-gradient(90deg,var(--burgundy),var(--gold));border-radius:8px;transition:width .8s ease}
+.resume-progress-label{display:flex;justify-content:space-between;font-size:.76rem;color:rgba(255,255,255,.4);margin-bottom:16px}
+.resume-last-section{margin-bottom:18px}
+.resume-last-title{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.4);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.resume-unit-chip{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;margin-bottom:7px}
+.resume-unit-icon{font-size:1.2rem;flex-shrink:0}
+.resume-unit-name{font-size:.88rem;font-weight:700;color:#fff;flex:1}
+.resume-unit-score{font-size:.82rem;font-weight:800;padding:3px 10px;border-radius:20px}
+.resume-unit-score.high{background:rgba(27,138,74,.25);color:#81c784}
+.resume-unit-score.mid{background:rgba(201,150,58,.2);color:#ffd54f}
+.resume-unit-score.low{background:rgba(198,40,40,.2);color:#ff8a80}
+.resume-unit-score.none{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
+.resume-actions{display:flex;flex-direction:column;gap:10px}
+.resume-btn-primary{display:block;padding:14px;width:100%;background:linear-gradient(135deg,var(--burgundy),var(--burgundy-dark));color:#fff;font-family:'Cairo',sans-serif;font-size:1.05rem;font-weight:800;border:none;border-radius:14px;cursor:pointer;box-shadow:0 8px 28px rgba(177,27,73,.4);transition:all .25s;text-align:center}
+.resume-btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(177,27,73,.55)}
+.resume-btn-secondary{display:block;padding:12px;width:100%;background:rgba(255,255,255,.05);color:rgba(255,255,255,.6);font-family:'Cairo',sans-serif;font-size:.93rem;font-weight:700;border:1px solid rgba(255,255,255,.1);border-radius:14px;cursor:pointer;transition:all .25s;text-align:center}
+.resume-btn-secondary:hover{background:rgba(255,255,255,.09);color:#fff}
+/* بيانات الجلسة الجديدة — مطوية بشكل افتراضي */
+.new-student-toggle{font-size:.82rem;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;cursor:pointer;text-decoration:underline}
+.new-student-form{display:none;margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:14px}
+
+/* ── صور الأسئلة الهندسية ── */
+.qtext img {
+  max-width: 280px;
+  width: 100%;
+  margin: 12px auto 4px;
+  display: block;
+  border-radius: 10px;
+  background: rgba(255,255,255,.97);
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35);
+}
+@media(max-width:560px){
+  .qtext img { max-width: 220px; padding: 7px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-layer" id="bg-layer"></div>
+<div class="bg-grid"></div>
+<div class="bg-subject-layer" id="bg-subject-layer"></div>
+<div class="floating-particles" id="floating-particles"></div>
+<div class="wave-bg"><svg viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C150,180 350,0 600,100 C850,200 1050,20 1200,100 L1200,200 L0,200 Z" fill="rgba(177,27,73,0.3)"/><path d="M0,140 C200,60 400,180 700,120 C900,80 1100,160 1200,140 L1200,200 L0,200 Z" fill="rgba(13,115,119,0.2)"/></svg></div>
+
+<!-- HEADER -->
+<div class="top-header">
+  <span class="header-logo">🎓</span>
+  <h1>منصة التدريبات الإثرائية</h1>
+  <p class="sub"> مدرسة الشحانية الإعدادية والثانوية للبنين</p>
+  <div class="hbadges">
+    <span class="hbadge">الصف التاسع</span>
+    <span class="hbadge gold">⭐ الاستعداد للاختبار التحصيلي 2025–2026</span>
+    <span class="hbadge">المواد الاساسية</span>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div id="timer-bar">
+  <div class="tlabel">⏱️ الوقت المتبقي</div>
+  <div id="timer-display">20:00</div>
+  <div class="tprogress"><div class="tfill" id="timer-fill" style="width:100%"></div></div>
+  <div class="unit-tag" id="timer-unit-tag"></div>
+</div>
+
+<!-- ENTRY -->
+<div id="entry-screen" class="screen active">
+  <div class="entry-card">
+    <h2>👋 مرحباً بك في منصة التدريب</h2>
+    <p class="sub">أدخل بياناتك مرة واحدة وتنقّل بين الوحدات بحرية 🚀</p>
+    <div class="form-group" style="animation:fadeInUp .5s .2s both"><label>👤 الاسم الكامل</label><input type="text" id="sname" placeholder="أدخل اسمك الكامل" maxlength="80"/></div>
+    <div class="form-group" style="animation:fadeInUp .5s .35s both"><label>📚 الصف</label>
+      <select id="sgrade"><option value="">-- اختر الصف --</option><option value="التاسع">التاسع</option></select>
+    </div>
+    <div class="form-group" style="animation:fadeInUp .5s .5s both"><label>🏫 الشعبة</label>
+      <select id="ssection"><option value="">-- اختر الشعبة --</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+    </div>
+    <button class="start-btn" onclick="goToSubjects()">🎯 ادخل إلى المنصة</button>
+  </div>
+</div>
+
+<!-- RESUME SCREEN ══════════════════════════════════════ -->
+<div id="resume-screen" style="display:none">
+  <!-- تُبنى ديناميكياً بالجافاسكريبت -->
+</div>
+
+<!-- SUBJECT SELECTION ══════════════════════════════════ -->
+<div id="subject-screen" style="display:none">
+  <div class="subj-screen-title">
+    <h2>📚 اختر المادة</h2>
+    <p>تدرّب على كل مادة واتابع تقدّمك</p>
+  </div>
+  <div class="student-bar">
+    <div>
+      <div class="sname" id="subj-bar-name"></div>
+      <div class="smeta" id="subj-bar-meta"></div>
+    </div>
+    <div class="sscores" id="subj-bar-scores"></div>
+  </div>
+  <div class="subjects-grid" id="subjects-grid">
+    <!-- تُبنى ديناميكياً بالجافاسكريبت -->
+  </div>
+  <div class="subj-overall">
+    <div class="so-label">📊 التقدم الكلي في جميع المواد</div>
+    <div class="so-bar-wrap"><div class="so-bar"><div class="so-fill" id="so-fill" style="width:0%"></div></div></div>
+    <div class="so-pct" id="so-pct">—</div>
+    <div class="so-detail" id="so-detail">لم تبدأ أي مادة بعد</div>
+  </div>
+</div>
+
+<!-- UNIT SELECTION ══════════════════════════════════════ -->
+<div id="unit-screen" class="screen">
+  <div class="back-nav">
+    <button class="back-btn" onclick="goToSubjects()">← المواد</button>
+    <div class="breadcrumb">المنصة / <span id="unit-screen-subject-label">العلوم</span> / الوحدات</div>
+  </div>
+  <div class="unit-screen-title">
+    <h2 id="unit-screen-title">🗂️ اختر الوحدة للتدرب عليها</h2>
+    <p>يمكنك تدريب كل وحدة أكثر من مرة وتحسين درجتك</p>
+  </div>
+  <div class="student-bar">
+    <div>
+      <div class="sname" id="bar-name"></div>
+      <div class="smeta" id="bar-meta"></div>
+    </div>
+    <div class="sscores" id="bar-scores"></div>
+  </div>
+  <div class="units-grid" id="units-grid-container">
+    <!-- تُبنى ديناميكياً حسب المادة المختارة -->
+  </div>
+  <div class="overall-bar" id="overall-bar">
+    <div class="ob-label">📊 إجمالي درجاتك</div>
+    <div class="ob-bar"><div class="ob-fill" id="ob-fill" style="width:0%"></div></div>
+    <div class="ob-pct" id="ob-pct">—</div>
+    <button onclick="showFinalSummary()" style="padding:8px 18px;background:linear-gradient(135deg,var(--gold),#a37520);color:#1a1a2e;border:none;border-radius:10px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:800;font-size:.85rem" id="final-btn">عرض التقرير النهائي ←</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen"></div>
+
+<!-- RESULT -->
+<div id="result-screen"></div>
+
+<!-- REVIEW -->
+<div id="review-screen"></div>
+
+<!-- FINAL SUMMARY -->
+<div id="final-screen" class="screen"></div>
+
+<!-- HISTORY / COMPARE MODAL -->
+<div id="compare-modal">
+  <div class="cmp-card">
+    <div class="cmp-header">
+      <h3 id="cmp-title">📊 سجل المحاولات</h3>
+      <button class="cmp-close" onclick="closeCompare()">✕</button>
+    </div>
+    <div class="cmp-unit-tabs" id="cmp-tabs"></div>
+    <div id="cmp-body"></div>
+  </div>
+</div>
+
+<!-- SAVING -->
+<div id="saving-overlay">
+  <div class="sbox">
+    <div class="spinner" id="spin-el"></div>
+    <h3>⏳ جارٍ حفظ نتيجتك</h3>
+    <p>لا تغلق الصفحة...</p>
+    <div class="serr" id="save-error">❌ فشل الاتصال، حاول مجدداً</div>
+    <button class="sretrybtn" id="retry-btn" onclick="retrySave()">🔄 إعادة المحاولة</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8Bp5w8Z0UEu6ymOyfzvv_50ESet6gUB_DaYh7xgqNNPpUSqROlOQTKFPoAkCS5wH5/exec";
+
+/* ============================================================
+   LOCAL STORAGE — HISTORY & PERSISTENCE SYSTEM
+============================================================ */
+
+// مفتاح الطالب الحالي (يُبنى من الاسم والشعبة)
+function studentKey(){ return ('q9_'+(student.name+'_'+student.section).replace(/\s+/g,'').toLowerCase()); }
+
+// مفتاح آخر طالب سجّل دخولاً (للاستعادة التلقائية)
+const LAST_STUDENT_KEY = 'q9_last_student';
+
+// حفظ بيانات آخر طالب
+function saveLastStudent(name, grade, section){
+  try{ localStorage.setItem(LAST_STUDENT_KEY, JSON.stringify({name, grade, section})); }catch(e){}
+}
+
+// استرجاع آخر طالب
+function loadLastStudent(){
+  try{
+    const raw = localStorage.getItem(LAST_STUDENT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+
+function makeEmptyUnits(n){ return Array.from({length:n},()=>[]); }
+
+function loadHistory(){
+  try{
+    const raw=localStorage.getItem(studentKey());
+    if(!raw) return {units:makeEmptyUnits(30)};
+    const h=JSON.parse(raw);
+    if(!h.units) h.units=makeEmptyUnits(30);
+    while(h.units.length<30) h.units.push([]);
+    return h;
+  }catch(e){return {units:makeEmptyUnits(30)};}
+}
+
+function saveAttemptToLS(unitId,attempt){
+  try{
+    const h=loadHistory();
+    if(!h.units[unitId]) h.units[unitId]=[];
+    h.units[unitId].push(attempt);
+    localStorage.setItem(studentKey(),JSON.stringify(h));
+  }catch(e){console.warn('LS unavailable');}
+}
+
+function getAttempts(unitId){ return loadHistory().units[unitId]||[]; }
+function getBest(unitId){ const a=getAttempts(unitId); return a.length?a.reduce((b,x)=>x.pct>b.pct?x:b,a[0]):null; }
+function getLast(unitId){ const a=getAttempts(unitId); return a.length?a[a.length-1]:null; }
+function getTrend(unitId){
+  const a=getAttempts(unitId);
+  if(a.length<2) return null;
+  const diff=a[a.length-1].pct - a[a.length-2].pct;
+  return diff>0?'up':diff<0?'down':'same';
+}
+
+// استعادة unitScores من localStorage للطالب الحالي
+function restoreUnitScores(){
+  const h = loadHistory();
+  UNITS.forEach(u => {
+    const attempts = h.units[u.id] || [];
+    if(attempts.length > 0){
+      const best = attempts.reduce((b,x)=>x.pct>b.pct?x:b, attempts[0]);
+      unitScores[u.id] = best.pct;
+    }
+  });
+}
+
+// إحصاءات ملخصة للطالب
+function getStudentStats(){
+  const h = loadHistory();
+  let completedUnits = 0, totalAttempts = 0, totalBestPct = 0;
+  let lastUnit = null, lastDate = null;
+  UNITS.forEach(u => {
+    const attempts = h.units[u.id] || [];
+    if(attempts.length > 0){
+      completedUnits++;
+      totalAttempts += attempts.length;
+      const best = attempts.reduce((b,x)=>x.pct>b.pct?x:b, attempts[0]);
+      totalBestPct += best.pct;
+      const last = attempts[attempts.length-1];
+      if(!lastDate || last.date > lastDate){
+        lastDate = last.date;
+        lastUnit = { unit: u, attempt: last };
+      }
+    }
+  });
+  const avgBest = completedUnits > 0 ? Math.round(totalBestPct/completedUnits) : 0;
+  const totalUnits = UNITS.filter(u=> {
+    const subj = SUBJECTS_CATALOGUE.find(s=>s.unitIds.includes(u.id));
+    return subj && subj.available;
+  }).length;
+  return { completedUnits, totalUnits, totalAttempts, avgBest, lastUnit, lastDate };
+}
+
+function pctClass(p){ return p>=80?'high':p>=60?'mid':'low'; }
+function trendIcon(t){ return t==='up'?'⬆️ تحسّن':t==='down'?'⬇️ تراجع':'➡️ ثابت'; }
+function fmtDate(iso){ try{return new Date(iso).toLocaleDateString('ar-SA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;} }
+
+const UNITS = [
+  // ── UNIT 0: Communicable Diseases ──────────────────────
+  {
+    id: 0, name: "الأمراض الانتقالية", subject: "العلوم", icon: "🧬", color: "#B11B49",
+    timer: 1200,
+    questions: [
+      {s:"القسم الأول: مفاهيم ومسببات الأمراض",q:'أي من العبارات الآتية توضح المفهوم الدقيق لـ "المرض الانتقالي" وفق المعايير العلمية؟',opts:["اختلال وظيفي ناتج عن طفرات جينية غير مرتبطة بالبيئة.","حالة مرضية تنتقل من كائن حي إلى آخر وتؤدي إلى تأثيرات سلبية في الصحة العامة.","اضطراب في أجهزة الجسم ناتج حصراً عن نقص العناصر الغذائية الكبرى.","مرض مزمن لا يتأثر بمخالطة المصابين أو العوامل الحيوية المحيطة."],ans:1},
+      {s:"القسم الأول: مفاهيم ومسببات الأمراض",q:'أي من الخيارات التالية يمثل التعريف العلمي الدقيق لـ "مسبب المرض" (Pathogen)؟',opts:["كائن حي وحيد الخلية يتعايش مع الجسم بشكل نفعي لتعزيز الهضم.","جزيئات كيميائية غير عضوية توجد في الغذاء المصنع.","أي عامل حيوي (مثل البكتيريا، الفيروسات، أو الفطريات) يسبب المرض للكائن الحي.","السموم الناتجة عن التفاعلات الأيضية الطبيعية داخل خلايا الجسم."],ans:2},
+      {s:"القسم الأول: مفاهيم ومسببات الأمراض",q:"استناداً إلى دراستك، ما هو التصنيف العلمي للكائنات التي يتكون جسمها من خلية واحدة فقط؟",opts:["الكائنات عديدة الخلايا.","الكائنات وحيدة الخلية.","الفطريات المركبة.","الأجهزة الحيوية المستقلة."],ans:1},
+      {s:"القسم الأول: مفاهيم ومسببات الأمراض",q:'حلل دور "السموم" التي تفرزها بعض الكائنات الدقيقة في إحداث المرض:',opts:["هي مواد كيميائية تنتجها الميكروبات وتسبب ضرراً مباشراً لوظائف الخلايا.","هي إنزيمات بروتينية تساعد الجسم على تفكيك مسببات الأمراض.","هي أجسام مضادة تفرزها خلايا الدم البيضاء للقضاء على العدوى.","هي مركبات عضوية تزيد من سرعة انقسام الخلايا السليمة."],ans:0},
+      {s:"القسم الأول: مفاهيم ومسببات الأمراض",q:'أي من مسببات الأمراض التالية هو المسؤول عن الإصابة بمرض "السل"؟',opts:["الفيروسات الدقيقة.","الفطريات المتطفلة.","البكتيريا.","البروتوزوا (الأوليات)."],ans:2},
+      {s:"القسم الثاني: طرق انتقال الأمراض والوقاية منها",q:"استنتج الطريقة الرئيسية التي تنتشر من خلالها الأمراض الانتقالية بين البشر وفقاً للمعايير الصحية:",opts:["عبر انتقال الفيروسات والبكتيريا والفطريات بوسائط مختلفة كالرذاذ أو اللمس.","عبر ممارسة النشاط البدني في الأماكن المفتوحة.","من خلال الالتزام بالأنظمة الغذائية المتوازنة.","لا توجد وسيلة لانتقال هذه الأمراض بين البشر إطلاقاً."],ans:0},
+      {s:"القسم الثاني: طرق انتقال الأمراض والوقاية منها",q:"بالاستناد إلى التدابير الصحية المتبعة في مطار الدوحة الدولي، أي الإجراءات التالية يعتبر الأنسب لمنع انتشار العدوى عبر الطائرات؟",opts:["تركيب فلاتر هواء عالية الكفاءة (HEPA) داخل مقصورات الركاب.","تعقيم الطائرات وتطهير الأسطح وتجهيزها صحياً قبل الرحلات القادمة.","تطبيق أنظمة الفرز الحراري لجميع المسافرين دون استثناء.","تحديث أنظمة الملاحة الجوية لتقليل زمن الرحلة."],ans:1},
+      {s:"القسم الثاني: طرق انتقال الأمراض والوقاية منها",q:'أي مما يلي يمثل المفهوم العلمي الدقيق لعملية "التعقيم" (Sterilization) في المختبرات والمنشآت الصحية؟',opts:["غسل الأدوات بالماء الجاري للتخلص من الأتربة الظاهرة.","استخدام تقنيات ووسائل فيزيائية أو كيميائية تهدف إلى القضاء التام على كافة مسببات الأمراض.","حفظ الأدوات في درجات حرارة منخفضة جداً لتثبيط حركة الميكروبات.","طلاء الأسطح بمواد عازلة لمنع التصاق الغبار."],ans:1},
+      {s:"القسم الثاني: طرق انتقال الأمراض والوقاية منها",q:"أي من التدابير الآتية يعد إجراءً وقائياً عاماً يساهم في الحد من تفشي الأوبئة في المجتمع؟",opts:["تجنب استخدام المعقمات الكيميائية في الأماكن العامة.","مشاركة الأدوات الوقائية الشخصية مع الزملاء.","الالتزام بالتدابير الصحية العامة والنظافة الشخصية المستمرة.","تقليل التهوية في القاعات المزدحمة للحفاظ على درجة الحرارة."],ans:2},
+      {s:"القسم الثاني: طرق انتقال الأمراض والوقاية منها",q:"الفطريات كائنات قد تسبب أمراضاً انتقالية، كيف يمكن الحد من انتشارها في البيئة المدرسية؟",opts:["بتوفير بيئات رطبة ومظلمة داخل الفصول.","باتباع بروتوكولات النظافة الدورية والتهوية الجيدة والتعقيم المستمر.","بزيادة التلامس المباشر مع الأسطح الخشبية غير المعالجة.","بالاعتماد على العلاج الدوائي فقط دون اتخاذ تدابير وقائية."],ans:1},
+      {s:"القسم الثالث: جهاز المناعة واللقاحات",q:"أي المكونات الحيوية التالية تمثل خط الدفاع الرئيسي في جهاز المناعة البشري؟",opts:["خلايا الدم الحمراء المسؤولة عن نقل الأكسجين.","خلايا الدم البيضاء المتخصصة في مقاومة مسببات الأمراض.","الصفائح الدموية المسؤولة عن تخثر الدم.","الهيموجلوبين المركز في بلازما الدم."],ans:1},
+      {s:"القسم الثالث: جهاز المناعة واللقاحات",q:"ما الفرق بين المناعة النشطة والمناعة السلبية من حيث الآلية؟",opts:["النشطة تنتج عن قيام الجسم بصنع أجسام مضادة بنفسه، بينما السلبية هي الحصول على أجسام مضادة جاهزة.","النشطة توفر حماية مؤقتة جداً، بينما السلبية تمنح الجسم ذاكرة مناعية لسنوات.","النشطة تعتمد على الأدوية الكيميائية، بينما السلبية تعتمد على المكملات الغذائية.","لا يوجد اختلاف جوهري في الآلية، فكلاهما يتطلب الإصابة الفعلية بالمرض."],ans:0},
+      {s:"القسم الثالث: جهاز المناعة واللقاحات",q:"كيف تصنف المناعة التي يكتسبها الجسم عقب التعرض الطبيعي لمسبب مرض دون تدخل طبي؟",opts:["مناعة اصطناعية سلبية.","مناعة طبيعية نشطة.","لقاح اصطناعي وقائي.","تدبير صحي مكتسب."],ans:1},
+      {s:"القسم الثالث: جهاز المناعة واللقاحات",q:"يقيم العلماء فاعلية اللقاحات في المجتمع بناءً على قدرتها على:",opts:["القضاء الفوري على الأعراض الوراثية لدى المواليد.","الوقاية من الإصابة بالأمراض الانتقالية وتقليل معدلات انتشارها مجتمعياً.","زيادة كفاءة الجهاز العضلي وتحسين اللياقة البدنية.","توفير حماية ضد الملوثات الكيميائية غير الحيوية."],ans:1},
+      {s:"القسم الثالث: جهاز المناعة واللقاحات",q:'أي العبارات التالية تصف دور اللقاحات في تحفيز "المناعة الاصطناعية النشطة"؟',opts:["حقن الجسم بميكروبات مضعفة أو أجزاء منها لتحفيز الجهاز المناعي على إنتاج أجسام مضادة.","تزويد الجسم بجرعات عالية من الفيتامينات لقتل البكتيريا مباشرة.","سحب الأجسام المضادة من الجسم لتقليل العبء على خلايا الدم البيضاء.","حقن الجسم بأجسام مضادة جاهزة مستخلصة من كائنات أخرى لتوفير حماية فورية."],ans:0},
+      {s:"القسم الرابع: مهارات الاستقصاء العلمي",q:'عند تنفيذ تجربة لملاحظة نمو الميكروبات، ماذا تتوقع أن تشاهد في أطباق "البتري" المخصصة للأيدي غير المغسولة؟',opts:["سطحاً شفافاً تماماً خالياً من أي كائنات دقيقة.","نمو مستعمرات بكتيرية وفطرية واضحة ناتجة عن التلوث.","تحلل المادة المغذية (الآجار) واختفاءها من الطبق.","تحول الوسط الغذائي إلى حالة غازية نتيجة التفاعل الكيميائي."],ans:1},
+      {s:"القسم الرابع: مهارات الاستقصاء العلمي",q:"استنتج التفسير العلمي لقلة نمو الميكروبات في الأطباق الخاصة بالأيدي التي غُسلت بالماء والصابون:",opts:["الصابون يعمل كغذاء للميكروبات مما يسرع من موتها الطبيعي.","المواد المطهرة في الصابون والماء تعمل على إزالة وقتل مسببات الأمراض من الأيدي.","الميكروبات تهرب من الأسطح النظيفة وتنتقل إلى الأسطح الملوثة فقط.","الماء يحول الميكروبات إلى كائنات مفيدة غير مرئية."],ans:1},
+      {s:"القسم الرابع: مهارات الاستقصاء العلمي",q:"عندما تقوم بوصف وتحديد أشكال وألوان المستعمرات الحيوية النامية في المختبر، أي مهارة استقصائية تمارسها؟",opts:["مهارة التنبؤ بالنتائج المستقبلية.","مهارة الملاحظة الدقيقة.","مهارة الفرضية العلمية.","مهارة القياس باستخدام الأدوات المعيارية."],ans:1},
+    ]
+  },
+
+  // ── UNIT 1: Human Reproduction ─────────────────────────
+  {
+    id: 1, name: "التكاثر عند الإنسان", subject: "العلوم", icon: "🧪", color: "#0d7377",
+    timer: 1800,
+    questions: [
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"أي مما يلي يعتبر العضو المسؤول عن إنتاج الحيوانات المنوية؟",opts:["غدة البروستات.","الحويصلة المنوية.","الخصيتان.","قناة الحيوانات المنوية."],ans:2},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"ما الوظيفة الأساسية للمبيضين في الجهاز التناسلي الأنثوي؟",opts:["استقبال البويضة المخصبة.","إنتاج البويضات.","توفير الغذاء للجنين.","حماية الجنين من الصدمات."],ans:1},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"لماذا تقع الخصيتان خارج جسم الإنسان في كيس الصفن؟",opts:["لحمايتها من الإصابات الميكانيكية.","لسهولة انتقال الحيوانات المنوية.","لأن إنتاج الحيوانات المنوية وحركتها يتوقف عند درجة حرارة الجسم (37°C).","للسماح لغدة البروستات بفرز سوائلها."],ans:2},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"ما العضو الذي يربط بين المبيض والرحم وتحدث فيه عملية الإخصاب غالباً؟",opts:["المهبل.","قناة البويضات (قناة فالوب).","غدة البروستات.","بطانة الرحم."],ans:1},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"أي جزء في الجهاز التناسلي الأنثوي يتمدد ليسمح بنمو الجنين بداخله؟",opts:["المبيض.","قناة فالوب.","الرحم.","المثانة."],ans:2},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:'ما وظيفة "الأهداب" (Cilia) الموجودة في قناة البويضات؟',opts:["إنتاج سائل مغذي للبويضة.","دفع البويضة باتجاه الرحم لأنها غير قادرة على الحركة بنفسها.","منع دخول البكتيريا إلى الرحم.","المساعدة في انقسام البويضة المخصبة."],ans:1},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"أي من المكونات التالية يفرز سائلاً يزود الحيوانات المنوية بالسكر كمصدر للطاقة؟",opts:["الخصية.","قناة الحيوانات المنوية.","غدة البروستات.","المبيض."],ans:2},
+      {s:"أولاً: الجهاز التناسلي الذكري والأنثوي",q:"ما هو الاسم العلمي للخلية الجنسية (ذكرية أو أنثوية)؟",opts:["الجنين.","المشيج (جاميت).","الزيجوت.","الحويصلة."],ans:1},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:'بماذا يتميز "رأس" الحيوان المنوي لتمكينه من اختراق البويضة؟',opts:["يحتوي على مخزون كبير من الغذاء.","يحتوي على ميتوكوندريا لإنتاج الطاقة.","يحتوي على مواد كيميائية (في الجسم القمي).","يحتوي على أهداب صغيرة."],ans:2},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:'لماذا تمتلك الحيوانات المنوية أعداداً كبيرة من "الميتوكوندريا" في القطعة الوسطى؟',opts:["لحماية المادة الوراثية.","لتزويدها بالطاقة اللازمة للحركة عبر الذيل.","للمساعدة في اختراق غشاء البويضة.","لتخزين الغذاء للجنين المستقبلي."],ans:1},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:"ما الفرق الرئيسي بين البويضة والحيوان المنوي من حيث الحركة؟",opts:["البويضة متحركة والحيوان المنوي ثابت.","الحيوان المنوي متحرك (Motile) والبويضة غير قادرة على الحركة بنفسها.","كلاهما يتحرك باستخدام الأهداب.","كلاهما يتحرك باستخدام الذيل."],ans:1},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:"تحتوي البويضة على مخزون كبير من المواد الغذائية، ما الهدف من ذلك؟",opts:["لجذب الحيوانات المنوية إليها.","لحماية المادة الوراثية من التلف.","لتوفير الطاقة اللازمة للانقسام الخلوي بعد الإخصاب.","لمساعدتها على الحركة داخل قناة فالوب."],ans:2},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:"كم عدد الكروموسومات (المادة الوراثية) في المشيج مقارنة بالخلايا الجسدية الأخرى؟",opts:["نفس العدد تماماً.","ضعف العدد.","نصف العدد.","الربع فقط."],ans:2},
+      {s:"ثانياً: الخلايا الجنسية (الأمشاج)",q:"بناءً على الشكل (12-4)، أي جزء في البويضة يمثل الغلاف الخارجي الذي يخترقه الحيوان المنوي؟",opts:["السيتوبلازم.","النواة.","المنطقة الشفافة / الإكليل المشع.","الكرية القطبية."],ans:2},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"ما هي نقطة البداية المعتادة للدورة الشهرية عند الإناث؟",opts:["عملية الإباضة.","بداية الحيض (تفكك بطانة الرحم).","انغراس البويضة في الرحم.","نمو بطانة الرحم."],ans:1},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"كم تبلغ المدة التقريبية للدورة الشهرية المنتظمة عند معظم الإناث؟",opts:["14 يوماً.","5 أيام.","28 يوماً.","40 يوماً."],ans:2},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:'في أي يوم تقريباً تحدث عملية "الإباضة" في دورة مدتها 28 يوماً؟',opts:["اليوم الخامس.","اليوم الرابع عشر.","اليوم الأول.","اليوم الثامن والعشرين."],ans:1},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"ماذا يحدث لبطانة الرحم إذا لم يتم تخصيب البويضة؟",opts:["تزداد سمكاً.","تتفكك وتخرج على شكل حيض.","تتحول إلى جنين.","تفرز هرمونات الحمل."],ans:1},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:'لماذا يمتد "الطور الخصب" (Fertile phase) لحوالي 6 أيام؟',opts:["لأن البويضة تعيش لمدة 6 أيام.","لأن الحيض يستمر لمدة 6 أيام.","لأن الحيوانات المنوية تعيش حتى 5 أيام والبويضة حوالي 24 ساعة.","لأن الرحم يحتاج 6 أيام للاستعداد."],ans:2},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"أي المصطلحات التالية يصف الوقت الذي لا يمكن فيه حدوث إخصاب؟",opts:["طور الإباضة.","الطور الخصب.","الطور غير الخصب (Infertile phase).","مرحلة البلوغ."],ans:2},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"تبدأ الدورة الشهرية عند الإناث عادة في سن البلوغ، ما هو السن التقريبي الشائع؟",opts:["5 سنوات.","12 عاماً تقريباً.","20 عاماً.","40 عاماً."],ans:1},
+      {s:"ثالثاً: الدورة الشهرية (Menstrual Cycle)",q:"ما السبب العلمي لآلام الحيض التي قد تشعر بها بعض الإناث؟",opts:["حركة البويضة في قناة فالوب.","تقلصات عضلات الرحم لتفكيك البطانة.","إنتاج البويضات في المبيض.","نقص الفيتامينات في الجسم."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"أين تنغرس البويضة المخصبة عادة لتبدأ في النمو كجنين؟",opts:["في المبيض.","في قناة فالوب.","في بطانة الرحم (Endometrium).","في عنق الرحم."],ans:2},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"ما وظيفة السائل الأمنيوسي (Amniotic fluid) المحيط بالجنين؟",opts:["تزويد الجنين بالغذاء.","نقل الأكسجين لدم الجنين.","حماية الجنين من الصدمات الخارجية.","التخلص من الفضلات السائلة."],ans:2},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"ما العضو الذي يمثل حلقة الوصل لنقل الغذاء والأكسجين من دم الأم إلى دم الجنين؟",opts:["الحبل السري.","المشيمة (Placenta).","الكيس الأمنيوسي.","عضلة الرحم."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"أي تركيب يربط جسم الجنين مباشرة بالمشيمة؟",opts:["قناة فالوب.","الحبل السري (Umbilical cord).","الخملات.","بطانة الرحم."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:'لماذا توجد "خملات" (Villi) بكثرة في المشيمة؟',opts:["لحماية الجنين من الصدمات.","لزيادة مساحة السطح لتبادل العناصر الغذائية والغازات.","لإنتاج خلايا دم للجنين.","لمنع اختلاط دم الأم بدم الجنين."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"أي من الفضلات التالية تنتقل من الجنين إلى المشيمة ليتم التخلص منها؟",opts:["الأكسجين والجلوكوز.","ثاني أكسيد الكربون واليوريا.","الفيتامينات والأملاح.","السائل الأمنيوسي."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"هل يختلط دم الأم بدم الجنين داخل المشيمة؟",opts:["نعم، يختلطان تماماً لتسهيل التغذية.","لا يختلطان، وتنتقل المواد عبر غشاء المشيمة.","يختلطان فقط في الشهور الثلاثة الأخيرة.","يختلطان فقط أثناء عملية الولادة."],ans:1},
+      {s:"رابعاً: الحمل وتطور الجنين",q:"ما تأثير تدخين الأم الحامل على الجنين؟",opts:["لا يؤثر لأن المشيمة تحمي الجنين تماماً.","يزيد من وزن الجنين بشكل صحي.","يضر بالجنين لأن الغازات الضارة تنتقل إليه عبر المشيمة.","يحسن من عملية تنفس الجنين داخل الرحم."],ans:2},
+      {s:"خامساً: رعاية الحامل والرضيع",q:"ما النصيحة الغذائية التي يقدمها الأطباء للحامل بخصوص السعرات الحرارية؟",opts:["تقليل السعرات لعدم زيادة الوزن.","تناول المزيد من الأطعمة الصحية لضمان صحة نمو الجنين.","الامتناع عن تناول الكربوهيدرات تماماً.","الاعتماد على السوائل فقط."],ans:1},
+      {s:"خامساً: رعاية الحامل والرضيع",q:"لماذا يُنصح بتجنب اللحوم غير المطبوخة جيداً أثناء الحمل؟",opts:["لأنها صعبة الهضم على الأم.","لأنها تسبب زيادة سريعة في الوزن.","لأنها قد تحتوي على مواد تضر بصحة الجنين.","لأن الجنين لا يحتاج للبروتين."],ans:2},
+      {s:"خامساً: رعاية الحامل والرضيع",q:"لماذا يحتاج الرضيع لرعاية خاصة بعد الولادة مباشرة؟",opts:["لأنه ينمو بسرعة كبيرة جداً.","لأنه غير قادر على الاعتناء بنفسه أو الحصول على غذائه وحده.","لتعليمه المهارات الاجتماعية فوراً.","لأن درجة حرارة الغرفة تؤذيه دائماً."],ans:1},
+      {s:"خامساً: رعاية الحامل والرضيع",q:'أي من التالي يُعد من جوانب رعاية الرضيع التي يجب أن تتضمنها "المطوية"؟',opts:["نوع المدرسة المستقبلي.","النظام الغذائي، النوم، والتنمية الاجتماعية.","كيفية ممارسة الرياضات العنيفة.","كيفية الحفاظ على وزن الأم بعد الولادة."],ans:1},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"بالنظر للشكل (12-12)، أي رقم يشير للسائل الذي يحمي الجنين؟",opts:["الرقم 1.","الرقم 2.","الرقم 3 (السائل الأمنيوسي).","الرقم الذي يشير لعضلة الرحم."],ans:2},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"إذا كان طول الدورة الشهرية لأنثى هو 21 يوماً، متى يتوقع حدوث الإباضة؟",opts:["دائماً في اليوم 14.","في منتصف الدورة تقريباً (حوالي اليوم 10-11).","في اليوم الأول من الحيض.","لا يمكن حدوث إباضة في هذه المدة."],ans:1},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"ما هي الوظيفة المشتركة بين الخصية والمبيض؟",opts:["إنتاج البول.","إنتاج الأمشاج (الخلايا الجنسية).","نقل الأجنة.","التخلص من السموم."],ans:1},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"أي مما يلي يعتبر تغييراً في أسلوب الحياة يجب على الحامل اتباعه؟",opts:["زيادة تناول الملح والكافيين.","الامتناع عن التدخين تماماً.","التوقف عن ممارسة أي نشاط بدني.","تناول الأجبان الطرية واللحوم النيئة."],ans:1},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"ما هو العضو الذي يمتد منه الحبل السري ليصل إلى الجنين؟",opts:["عنق الرحم.","المشيمة.","المبيض.","قناة فالوب."],ans:1},
+      {s:"سادساً: أسئلة مهارات التفكير",q:"ماذا يحدث إذا تم إخصاب البويضة بنجاح في قناة فالوب؟",opts:["تتوقف الدورة الشهرية وتنغرس البويضة في الرحم.","يحدث الحيض فوراً.","تتحلل البويضة وتخرج من الجسم.","تعود البويضة إلى المبيض لتنمو."],ans:0},
+      {s:"أسئلة التدريب المعتمدة على الأشكال التوضيحية",q:"ما هو العضو الذي يتم فيه إنتاج البويضات؟",opts:["الرحم (Uterus).","قناة البويضات (Fallopian tube).","المبيض (Ovary).","المهبل (Vagina)."],ans:2},
+      {s:"أسئلة التدريب المعتمدة على الأشكال التوضيحية",q:'أي جزء منه يحتوي على "الميتوكوندريا" المسؤولة عن توليد الطاقة للحركة؟',opts:["الرأس.","الجسم القمي.","القطعة الوسطى.","الذيل."],ans:2},
+      {s:"أسئلة التدريب المعتمدة على الأشكال التوضيحية",q:"اعتماداً على الرسم البياني للدورة الشهرية (شكل 11-12)، ماذا يمثل اليوم الـ 14 من دورة منتظمة مدتها 28 يوماً؟",opts:["بداية مرحلة الحيض وتفكك بطانة الرحم.","مرحلة الإباضة (انطلاق البويضة من المبيض).","نهاية الدورة الشهرية تماماً.","انغراس البويضة المخصبة في الرحم."],ans:1},
+      {s:"أسئلة التدريب المعتمدة على الأشكال التوضيحية",q:"في الشكل الذي يوضح الجنين داخل الرحم، أي رقم يشير إلى السائل الأمنيوسي ووظيفته الأساسية؟",opts:["الرقم (1): توصيل الأكسجين للجنين.","الرقم (2): نقل الفضلات من الجنين للأم.","الرقم (3): حماية الجنين من الصدمات الخارجية.","الرقم (1): إنتاج خلايا الدم للجنين."],ans:2},
+      {s:"أسئلة التدريب المعتمدة على الأشكال التوضيحية",q:"بناءً على الشكل كيف تنتقل المواد (الغذاء والأكسجين) من دم الأم إلى دم الجنين؟",opts:["عن طريق اختلاط دم الأم بدم الجنين مباشرة.","عبر غشاء المشيمة (الانتشار) دون أن يختلط الدمان.","عن طريق السائل الأمنيوسي المحيط بالجنين.","عبر انقباضات عضلات الرحم."],ans:1},
+    ]
+  },
+
+  // ── UNIT 2: Plant Reproduction + Universe ──────────────
+  {
+    id: 2, name: "التكاثر في النبات والكون المرئي", subject: "العلوم", icon: "🌿", color: "#1a6b9e",
+    timer: 1500,
+    questions: [
+      // Plant Reproduction
+      {s:"وحدة التكاثر في النبات",q:"ما هو الوصف العلمي الصحيح للثمرة بعد حدوث عملية الإخصاب؟",opts:["بويضة مخصبة","سبلة ذابلة","مبيض كربلة منتفخ","بتلة متحولة"],ans:2},
+      {s:"وحدة التكاثر في النبات",q:"ما هو الوصف العلمي الصحيح للبذرة الناتجة عن عملية التكاثر؟",opts:["مبيض ناضج","بويضة مخصبة","ساق قصيرة","برعم زهري"],ans:1},
+      {s:"وحدة التكاثر في النبات",q:"ما هي طريقة التكاثر اللاجنسي المتبعة في نبات الثوم والبصل؟",opts:["الأبصال","الدرنات","الرايزومات","الساق الجارية"],ans:0},
+      {s:"وحدة التكاثر في النبات",q:"كيف يتكاثر نبات البطاطس لاجنسياً لإنتاج أفراد جديدة؟",opts:["الأبصال","الساق الجارية","الرايزومات","الدرنات"],ans:3},
+      {s:"وحدة التكاثر في النبات",q:"ما هي الوسيلة التي يتكاثر بها نبات الفراولة لاجنسياً؟",opts:["الساق الجارية","الدرنات","الأبصال","الجذور"],ans:0},
+      {s:"وحدة التكاثر في النبات",q:"ما هي طريقة التكاثر اللاجنسي المميزة لنبات الزنجبيل؟",opts:["الساق الجارية","الرايزومات","الأبصال","الدرنات"],ans:1},
+      {s:"وحدة التكاثر في النبات",q:"لماذا ينتج نبات كيس الراعي عدداً هائلاً من البذور يصل لـ 40,000 بذرة؟",opts:["لضمان البقاء","لجذب الحيوانات","لزيادة الوزن","لتخزين الغذاء"],ans:0},
+      {s:"وحدة التكاثر في النبات",q:"ما هي وسيلة انتشار البذور التي تمتلك تراكيب تشبه الخطافات؟",opts:["الرياح","الماء","الحيوانات","الانفجار"],ans:2},
+      {s:"وحدة التكاثر في النبات",q:"في تجربة استقصاء نمو أنبوب اللقاح، ما هو المتغير المستقل؟",opts:["نمو الأنبوب","الضوء","نوع الزهرة","تركيز السكر"],ans:3},
+      {s:"وحدة التكاثر في النبات",q:"ما هو المتغير الضابط الذي يجب تثبيته عند دراسة تأثير الضوء على أنبوب اللقاح؟",opts:["طول الأنبوب","شدة الإضاءة","اتجاه النمو","تركيز السكر"],ans:3},
+      // Universe
+      {s:"وحدة تطور الكون المرئي",q:"بالاعتماد على أشكال المجرات المعروفة، ما اسم المجرة التي ينتمي إليها نظامنا الشمسي؟",opts:["أندروميدا","درب التبانة","القبعة","الدب الأكبر"],ans:1},
+      {s:"وحدة تطور الكون المرئي",q:"بالاعتماد على أشكال المجرات المعروفة، ما هو تصنيف مجرة درب التبانة؟",opts:["حلزونية","إهليلجية","غير منتظمة","كروية"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"ما هي القوة الأساسية المسؤولة عن ربط النجوم مع بعضها داخل المجرة؟",opts:["الكهربائية","المغناطيسية","الجاذبية","النووية الضعيفة"],ans:2},
+      {s:"وحدة تطور الكون المرئي",q:"ما هو الأصل المادي الذي تكونت منه المجرات والنجوم في بداية الكون؟",opts:["الثقوب السوداء","السديم","الكواكب الغازية","المذنبات"],ans:1},
+      {s:"وحدة تطور الكون المرئي",q:"كم تبلغ المسافة التي تقطعها السنة الضوئية الواحدة بوحدة المتر؟",opts:["9.5×10¹⁰ م","1.5×10¹¹ م","3.0×10⁸ م","9.5×10¹⁵ م"],ans:3},
+      {s:"وحدة تطور الكون المرئي",q:"ما التصنيف العلمي للشمس؟",opts:["نجم","مجرة","نظام","سديم"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"ما هي العناصر الكيميائية الأكثر وفرة في تكوين الشمس؟",opts:["أكسجين وكربون","حديد ونيكل","هيدروجين وهليوم","نيتروجين وأرغون"],ans:2},
+      {s:"وحدة تطور الكون المرئي",q:"ما نوع التفاعلات النووية التي تحدث في قلب الشمس لإنتاج الطاقة؟",opts:["احتراق كيميائي","انشطار نووي","تأكسد واختزال","اندماج نووي"],ans:3},
+      {s:"وحدة تطور الكون المرئي",q:"كم عدد أنوية الهيدروجين التي تندمج معاً لإنتاج نواة هيليوم واحدة؟",opts:["4 أنوية","نواتان","6 أنوية","8 أنوية"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"ما هي الشروط الفيزيائية الضرورية لحدوث الاندماج النووي في النجوم؟",opts:["حرارة وضغط عالٍ","برودة وجفاف","فراغ تام","أكسجين ووقود"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"كيف تصنف الكواكب الداخلية مثل عطارد والزهرة والأرض والمريخ؟",opts:["غازية عملاقة","جليدية","صخرية","سائلة"],ans:2},
+      {s:"وحدة تطور الكون المرئي",q:"ما هي الصفة التي تميز الكواكب الخارجية مقارنة بالكواكب الداخلية؟",opts:["حجم صغير","سطح صلب","كثافة عالية","كثافة منخفضة"],ans:3},
+      {s:"وحدة تطور الكون المرئي",q:"أين يقع حزام الكويكبات ضمن مكونات نظامنا الشمسي؟",opts:["خلف نبتون","بين المريخ والمشتري","حول الشمس مباشرة","بين الأرض والمريخ"],ans:1},
+      {s:"وحدة تطور الكون المرئي",q:"على ماذا يعتمد المسار النهائي الذي تتخذه دورة حياة أي نجم؟",opts:["كتلته الابتدائية","درجة حرارته","سرعة دورانه","بعده عن المجرة"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"إلى ماذا ستتحول الشمس بعد نفاذ وقودها الهيدروجيني (بعد 5 مليارات سنة)؟",opts:["ثقب أسود","مستعر أعظم","عملاق أحمر","نجم نيتروني"],ans:2},
+      {s:"وحدة تطور الكون المرئي",q:"مما يتكون المذنب بشكل أساسي عند تحركه في مدار حول الشمس؟",opts:["غازات ملتهبة","معادن سائلة","ضوء مركز","جليد وصخور"],ans:3},
+      {s:"وحدة تطور الكون المرئي",q:"ما هو شكل المدار الذي يسلكه المذنب أثناء دورانه حول الشمس؟",opts:["دائري منتظم","بيضاوي شديد الاستطالة","حلزوني معقد","خط مستقيم"],ans:1},
+      {s:"وحدة تطور الكون المرئي",q:"بالاعتماد على أشكال المجرات المعروفة، كيف تتحرك النجوم في المجرة الحلزونية؟",opts:["حول المركز","للداخل والخارج","حركة عشوائية","في خطوط متوازية"],ans:0},
+      {s:"وحدة تطور الكون المرئي",q:"بالاعتماد على أشكال المجرات المعروفة، كيف تتحرك النجوم في المجرة الإهليلجية؟",opts:["حول المركز فقط","في مدارات دائرية","للداخل والخارج","ثابتة لا تتحرك"],ans:2},
+      {s:"وحدة تطور الكون المرئي",q:"بالاعتماد على أشكال المجرات المعروفة، كيف توصف حركة النجوم في المجرة غير المنتظمة؟",opts:["حركة دائرية","حركة لولبية","حركة اهتزازية","ليس لها حركة محددة"],ans:3},
+    ]
+  },
+
+
+ 
+// ISLAMIC UNIT 1
+  {
+    id: 7, name: "أحكام الآيات والأحاديث", subject: "التربية الإسلامية", icon: "📖", color: "#1b5e20",
+    timer: 1500,
+    questions: [
+      {s:"الآيات الكريمة وأحكامها",q:"قال تعالى:  يَا بَنِي آدَمَ خُذُوا زِينَتَكُمْ عِندَ كُلِّ مَسْجِدٍ  . المقصود بـ (عِندَ كُلِّ مَسْجِدٍ ) هو :",opts:["عند كل صلاة.", "أيّ مسجد تُقام فيه صلاة الجمعة.", "المساجد الثلاثة : الحرام – النبوي – الأقصى.", "أي تجمع يقام للمسلمين فيه صلاة أم لا توجد صلاة ."],ans:0},
+      {s:"الآيات الكريمة وأحكامها",q:"كان بعض العرب من غير قريش يطوفون بالبيت عُراة والسبب هو :",opts:["إرضاءً لآلهتهم .", "إظهار الخضوع والتذلل لله تعالى.", "اتباعهم لتعليمات شريعة سابقة.", "زعمهم أنه لا يصح طوافهم بثياب عصوا الله تعالى فيها ."],ans:3},
+      {s:"الآيات الكريمة وأحكامها",q:"قال تعالى:  يَا بَنِي آدَمَ خُذُوا زِينَتَكُمْ عِندَ كُلِّ مَسْجِدٍ  . ستر العورة عند كل صلاة :",opts:["مباح.", "واجب.", "مندوب", "سنة مؤكدة."],ans:1},
+      {s:"الآيات الكريمة وأحكامها",q:"وَكُلُوا وَاشْرَبُوا وَلَا تُسْرِفُوا إِنَّهُ لَا يُحِبُّ الْمُسْرِفِينَ ، النموذج الأمثل للإنفاق في الآية :",opts:["عدم الإنفاق في المباحات.", "الإنفاق في ما حرمه الله تعالى.", "التوسط و الاعتدال في الإنفاق.", "مجاوزة الحد في الإنفاق المباح."],ans:2},
+      {s:"الآيات الكريمة وأحكامها",q:"مرادف كلمة ( البغي ) في قوله تعالى  :   قُلْ إِنَّمَا حَرَّمَ رَبِّيَ الْفَوَاحِشَ مَا ظَهَرَ مِنْهَا وَمَا بَطَنَ وَالْإِثْمَ وَالْبَغْيَ بِغَيْرِ الْحَقِّ :",opts:["المعصية.", "كل ذنب.", "التعدي على الناس.", "ما استتر من المعاصي."],ans:2},
+      {s:"الآيات الكريمة وأحكامها",q:"قال تعالى   قُلْ إِنَّمَا حَرَّمَ رَبِّيَ الْفَوَاحِشَ مَا ظَهَرَ مِنْهَا وَمَا بَطَنَ وَالْإِثْمَ  ،مثال الفواحش الباطنة :",opts:["الطواف عراة.", "الشرك بالله تعالى.", "المجاهرة بالمعصية.", "الزنا و ذنوب السرائر."],ans:3},
+      {s:"الآيات الكريمة وأحكامها",q:"قال تعالى   وَلِكُلِّ أُمَّةٍ أَجَلٌ ۖ فَإِذَا جَاءَ أَجَلُهُمْ لَا يَسْتَأْخِرُونَ سَاعَةً ۖ وَلَا يَسْتَقْدِمُونَ، تشير الآية إلى :",opts:["الإخلاص في العبادة.", "الاعتدال و التوسط في المباحات.", "المبادرة بالأعمال الصالحة قبل فوات الأوان.", "التحليل و التحريم مرجعه إلى الله تعالى وحده."],ans:2},
+      {s:"أحاديث نبوية",q:"( المفلس فينا من لا درهم له و لا متاع ) المقصود بالمتاع في هذا المقطع من الحديث الشريف هو ما :",opts:["ما ينتفع به.", "يُحْرَصُ على اقتنائه.", "يُتَوَصًّلُ به إلى المتعة.", "يختاره الإنسان باجتهاده."],ans:0},
+      {s:"أحاديث نبوية",q:"المراد بالمفلس في نظر رسول الله ﷺ  في حديث \" أتدرون ما المفلس \"من فقد :",opts:["ماله.", "أولاده.", "بيته.", "حسناته بسبب معاصيه."],ans:3},
+      {s:"أحاديث نبوية",q:"مرادف كلمة ( قذف هذا)  في قول رسول الله ﷺ   \" و يأتي يوم القيامة وقد شتم هذا ، و قذف هذا \" :",opts:["الشتم.", "الضرب.", "إراقة الدم.", "اتهم غيره بالفاحشة."],ans:3},
+      {s:"أحاديث نبوية",q:"العدل الإلهي في  حديث  \" أتدرون ما المفلس ؟ \" أن الله يتعامل مع من يعتدي على غيره بأن  :",opts:["يخلده في النار.", "يدخله الجنة بلا حساب.", "يقتص منه بقدر معاصيه.", "يحاسبه و لكن لا يدخله النار."],ans:2},
+      {s:"أحاديث نبوية",q:"حقوق العباد تكفرها .",opts:["التوبة فقط.", "الاستغفار فقط.", "رد الحقوق إلى أهلها فقط.", "التوبة و الاستغفار ورد الحقوق إلى أهلها."],ans:3},
+      {s:"الإيمان بالقدر",q:"يُعَرَّف الإيمان بالقدر بأنه :",opts:["التصديق الجازم بأن الله عز وجل حدد وقتاً ينهي فيه الحياة الدنيا.", "اليقين بأن الساعة آتية لا ريب فيها و أن الله تعالى يبعث من في القبور .", "الاعتقاد الجازم بأن ما يحدث في الكون إنما هو بعلم الله تعالى و إرادته.", "التصديق الجازم بأن الله عز وجل بعث في كل أمة رسولاً يدعوهم إلى عبادة الله وحده."],ans:2},
+      {s:"الإيمان بالقدر",q:"حكم الإيمان بالقدر :",opts:["مباح.", "واجب.", "مندوب.", "سنة مستحبة."],ans:1},
+      {s:"الإيمان بالقدر",q:"مراتب  الإيمان بالقدر  ، على النحو التالي :",opts:["الكتابة  - المشيئة – الخلق – العلم.", "العلم – الكتابة – المشيئة – الخلق .", "المشيئة – الكتابة – العلم – الخلق .", "الخلق – المشيئة – الخلق – العلم ."],ans:1},
+      {s:"الإيمان بالقدر",q:"قال الله تعالى:  وَعِندَهُ مَفَاتِحُ الْغَيْبِ لَا يَعْلَمُهَا إِلَّا هُوَ  :دلت الآية الكريمة على مرتبة من مراتب الإيمان بالقدر هي :",opts:["الخلق.", "العلم.", "الكتابة.", "المشيئة."],ans:1},
+      {s:"الإيمان بالقدر",q:"قال الله تعالى:  وَكُلَّ شَيْءٍ أَحْصَيْنَاهُ فِي إِمَامٍ مُّبِينٍ:دلت الآية الكريمة على مرتبة من مراتب الإيمان بالقدر هي :",opts:["الخلق.", "العلم.", "الكتابة.", "المشيئة."],ans:2},
+      {s:"الإيمان بالقدر",q:"قال الله تعالى:  وإِذَا قَضَى أَمْرًا فَإِنَّمَا يَقُولُ لَهُ كُن فَيَكُونُ :دلت الآية الكريمة على مرتبة من مراتب الإيمان بالقدر هي :",opts:["الخلق.", "العلم.", "الكتابة.", "المشيئة."],ans:3},
+      {s:"الإيمان بالقدر",q:"قال الله تعالى:   وَخَلَقَ كُلَّ شَيْءٍ فَقَدَّرَهُ تَقْدِيرًا دلت الآية الكريمة على مرتبة من مراتب الإيمان بالقدر هي :",opts:["الخلق.", "العلم.", "الكتابة.", "المشيئة."],ans:0},
+      {s:"الإيمان بالقدر",q:"من الأمثلة على القدر الذي  يحاسب عليه الإنسان :",opts:["الأجل.", "الرزق .", "الصلاة .", "الصورة التي خلق عليها."],ans:2},
+      {s:"الإيمان بالقدر",q:"من الأمثلة على القدر الذي لا يحاسب عليه الإنسان :",opts:["الصلاة.", "الصوم.", "الزكاة.", "الرزق."],ans:3}
+    ]
+  },
+  // ISLAMIC UNIT 2
+  {
+    id: 8, name: "السيرة والأحكام الشرعية", subject: "التربية الإسلامية", icon: "🕌", color: "#2e7d32",
+    timer: 1500,
+    questions: [
+      {s:"التوكل والتواكل",q:"تعريف التوكل على الله :",opts:["الأخذ بالأسباب فقط.", "الاعتماد على الله تعالى فقط.", "الاعتماد على الله عز وجل و الأخذ الأسباب.", "الاعتماد على الله عز و جل و عدم الأخذ بالأسباب ."],ans:2},
+      {s:"التوكل والتواكل",q:"تعريف التواكل :",opts:["الأخذ بالأسباب فقط.", "الاعتماد على الله تعالى فقط.", "الاعتماد على الله عز وجل و الأخذ الأسباب.", "الاعتماد على الله عز و جل و عدم الأخذ بالأسباب ."],ans:3},
+      {s:"الأطعمة والذبائح",q:"قال الله تعالى:   يَا أَيُّهَا النَّاسُ كُلُوا مِمَّا فِي الْأَرْضِ حَلَالًا طَيِّبًا  دليل على أن الأصل في الأطعمة :",opts:["الوجوب.", "التحريم.", "الإباحة.", "الكراهة."],ans:2},
+      {s:"الأطعمة والذبائح",q:"من الأطعمة التي يحرم أكلها :",opts:["العقاب.", "الكبد.", "النعامة.", "الطحال."],ans:0},
+      {s:"الأطعمة والذبائح",q:"حكم الأضحية :",opts:["فرض.", "حرام.", "مكروه.", "سنة مؤكدة."],ans:3},
+      {s:"الأطعمة والذبائح",q:"حكم العقيقة :",opts:["فرض.", "حرام.", "مكروه.", "سنة مؤكدة."],ans:3},
+      {s:"الأطعمة والذبائح",q:"من الأطعمة المباحة شرعاً:",opts:["الجراد.", "الميتة.", "الصقر.", "الخنزير."],ans:0},
+      {s:"الأطعمة والذبائح",q:"( ما يذبح من الأنعام في أيام عيد الأضحى ) .يطلق التعريف السابق على مفهوم :",opts:["الهدي.", "الوليمة.", "العقيقة.", "الأضحية."],ans:3},
+      {s:"الأطعمة والذبائح",q:"( ما يذبح من الأنعام عن المولود عند ولادته) .يطلق التعريف السابق على مفهوم :",opts:["الهدي.", "الوليمة.", "العقيقة.", "الأضحية."],ans:2},
+      {s:"الأطعمة والذبائح",q:"الحكمة من مشروعية الأضحية :",opts:["إحياء سنة إبراهيم عليه السلام.", "شكر الله سبحانه على نعمة المولود.", "الأثر الطيب على الطفل و حسن نشأته.", "إدخال البهجة في نفوس و أقارب المولود."],ans:0},
+      {s:"الأطعمة والذبائح",q:"المجزئ من الأنعام  في الأضحية و العقيقة:",opts:["المريضة الظاهر مرضها.", "العوراء الظاهر عورها", "العرجاء الظاهر عرجها.", "السليمة من كل العيوب الظاهرة ."],ans:3},
+      {s:"السيرة النبوية",q:"من شروط الأضحية و العقيقة بلوغ سن الإبل :",opts:["سنتان.", "ثلاث سنين.", "أربع سنين.", "خمس سنين."],ans:3},
+      {s:"السيرة النبوية",q:"العبارة الصحيحة للمقارنة بين العقيقة والأضحية هي  :",opts:["للعقيقة سن معين بينما الأضحية لا سن لها.", "حكم العقيقة واجبة بينما الأضحية سنة مؤكدة.", "تكون الأضحية من الأبل و البقر و العقيقة تقتصر على الغنم.", "العقيقة تذبح عن المولود يوم سابعه ، ة الأضحية تذبح في أيام عيد الأضحي."],ans:3},
+      {s:"السيرة النبوية",q:"السورة التي نزلت تنعي رسول الله ﷺ هي سورة.",opts:["العصر.", "النصر.", "الفتح.", "الكوثر."],ans:1},
+      {s:"السيرة النبوية",q:"قال تعالى:  إِذَا جَآءَ نَصۡرُ ٱللَّهِ وَٱلۡفَتۡحُ  تدل الآية الكريمة على  :",opts:["فتح مكة المكرمة.", "فتح حصون خيبر.", "انتصار المسلمين في بدر.", "اقتراب أجل رسول الله ﷺ."],ans:3},
+      {s:"السيرة النبوية",q:"من العلامات التي دلت على اقتراب أَجَل النبي ﷺ قوله في حجة الوداع :",opts:["\" فاتقوا الله في النساء\".", "\" كلكم لآدم و آدم من تراب \".", "\" لعلي لا ألقاكم بعد عامي هذا \".", "\" إن ربكم واحد ، و إن أباكم واحد\" ."],ans:2},
+      {s:"السيرة النبوية",q:"الزوجة التي استأذن الرسول ﷺ زوجاته أن يُمَرَضَ عندها هي  أم المؤمنين :",opts:["ميمونة أم سلمة رضي الله عنها .", "ميمونة بنت الحارث رضي الله عنها .", "عائشة بنت أبي بكر الصديق رضي الله عنها .", "حفصة بنت عمر بن الخطاب رضي الله عنها ."],ans:2},
+      {s:"السيرة النبوية",q:"الصحابي الذي اختاره الرسول ﷺ ليصلي بالناس هو :",opts:["عمر بن الخطاب رضي الله عنه.", "أبو بكر الصديق رضي الله عنه.", "علي بن أبي طالب رضي الله عنه.", "عثمان بن عفان رضي الله عنه."],ans:1},
+      {s:"السيرة النبوية",q:"أخر وصايا رسول ﷺ  لأمته عند وفاته :",opts:["الحج.", "الصيام.", "الزكاة.", "الصلاة و ما ملكت أيمانكم."],ans:3},
+      {s:"السيرة النبوية",q:"من  الصحابي القائل بعد وفاة  الرسول ﷺ ( ما مات رسول الله ﷺ و لكن ذهب للقاء ربه ) :",opts:["عمر بن الخطاب رضي الله عنه.", "أبو بكر الصديق رضي الله عنه.", "علي بن أبي طالب رضي الله عنه.", "عثمان بن عفان رضي الله عنه."],ans:0},
+      {s:"السيرة النبوية",q:"من  الصحابي القائل بعد وفاة  الرسول ﷺ ( من كان يعبد محمداً فإن محمد قد مات ، و من كان يعبد الله فإن الله حي لا يموت ) :",opts:["عمر بن الخطاب رضي الله عنه.", "أبو بكر الصديق رضي الله عنه.", "علي بن أبي طالب رضي الله عنه.", "عثمان بن عفان رضي الله عنه."],ans:1}
+    ]
+  },
+  // ARABIC UNIT
+  {
+    id: 9, name: "البلاغة والقواعد والأساليب", subject: "اللغة العربية", icon: "✍️", color: "#4a148c",
+    timer: 1200,
+    questions: [
+      {s:"أساليب لغوية",q:"مَا الجُمْلَةُ الّتِي احْتَوتْ عَلَى (أُسْلُوبِ التَّعَجُّبِ)؟",opts:["مَا أكْرَمَ العربَ.", "أكْرَمَ الأبُ الضيفَ.", "مَا أكرمْتُ إلا أبـــَــاكَ.", "أُكْرِمُ الضَّيْفَ ابْتِغَاءَ وَجْهِ اللهِ."],ans:0},
+      {s:"أساليب لغوية",q:"أيُّ الجُمْلِ الآتِيَةِ احْتَوَتْ عَلَى (أُسْلُوبِ مَدْحٍ)؟",opts:["نِعَمُ اللهِ كَثِيرةٌ.", "بِئْسَ الْخُلُقُ النّفَاقُ.", "نِعْمَ الْخُلُقُ الصّدْقُ.", "نَعِمَ الإنْسانُ بِالأمْنِ والأمَانِ."],ans:2},
+      {s:"أساليب لغوية",q:"أيّ الأفعال الآتية لا يجوز صياغة (اسم تفضيل) منه؟",opts:["حسُنَ.", "كبُرَ.", "علِمَ.", "ماتَ."],ans:3},
+      {s:"أساليب لغوية",q:"\" وقلت للعجوز: انظر، كم هو جميل! — ما نوع الأسلوب اللغوي فيما تحته خطّ الجملة السابقة؟",opts:["نداء.", "أمر.", "توكيد.", "استفهام."],ans:1},
+      {s:"المحسنات البديعية",q:"قال الشاعر: \"مَــــنْ يَسْتَجِـــــرْ بِصَدِيقٍ أَعْـــــــدَاءٍ لَــــهُ      لَاقَى عَــــــدُوًّا لَا يَخَـــــــــافُ وَعـــــِيــــــــدَا\" — مَا نَوعُ الْعِلَاقَةِ بَيْنَ مَا تَحْتَهُ خَطٌّ فِي الْبَيْتِ السَّابِقِ؟",opts:["طِبَاقٌ.", "تَرَادُفٌ.", "مُقَابَلَةٌ.", "سَجْعٌ."],ans:0},
+      {s:"المحسنات البديعية",q:"- \"لَاحَظ المخرج تَصْفِيقَ المُتفرّجِينَ، وَفَرْحَةَ الْمُسْتَعْرِضِينَ\" — مَا نَوعُ الْعِلَاقَةِ بَيْنَ مَا تَحْتَهُ خَطٌّ فِي الْعِبَارَةِ السَّابِقَةِ؟",opts:["طِبَاقٌ.", "مُقَابَلَةٌ.", "جِنَاسٌ.", "سَجْعٌ."],ans:3},
+      {s:"صيغ الصرف والإعراب",q:"- قال الله --:\" إِنَّ اللَّهَ غَفُورٌ شَكُورٌ \" {الشورى 23} — ما الوزن الصحيح لما تحته خط فيما تحته خط في الآية السابقة؟",opts:["فعيل.", "فعول.", "فعّـال.", "مفعول."],ans:1},
+      {s:"أساليب لغوية",q:"17- أي الجمل الآتية حوت (أسلوب ذمّ)؟ — أي الآيات الآتية وردت فيها (صيغة مبالغة) ؟",opts:["\"شَاكِرًا لِأَنْعُمِهِ اجْتَبَاهُ وَهَدَاهُ إِلَى صِرَاطٍ مُّسْتَقِيمٍ\"  (النحل 121)", "\"وَإِنْ تَعُدُّوا نِعْمَتَ اللَّهِ لَا تُحْصُوهَا إِنَّ الْإِنسَانَ لَظَلُومٌ كَفَّارٌ\" (إبراهيم 34)", "\"تِلْكَ آيَاتُ اللهِ نَتْلُوهَا عَلَيْكَ بِالْحَقِّ وَإِنَّكَ لَمِنَ الْمُرْسَلِينَ\" (البقرة 252)", "\"كَذَلِكَ لِنَصْرِفَ عَنْهُ السُّوءَ وَالْفَحْشَاءَ إِنَّهُ مِنْ عِبَادِنَا الْمُخْلَصِينَ\"   (يوسف 24)"],ans:1},
+      {s:"صيغ الصرف والإعراب",q:"أي أبيات البوصيري الآتية ورد فيه (اسم تَفْضيل)؟",opts:["مُحَمَّدٌ ثَابِتُ المِيثَاقِ حَــــــــــافِظُهُ                مُحَمَّدٌ طَيِّبُ الأَخْـــــــــــــلاقِ والشَّيَمِ", "مُحَمَّدٌ سَيِّدٌ طَابَـــــــــــتْ منــــــــــــــــــاقبه                مُحَمَّدٌ صَاغَهُ الرَّحْمَنُ بِالنِّعَــــــــــــــــــمِ", "مُحَمَّدٌ أَشْرَفُ الْأَعْرَابِ والعَجَمِ                مُحَمَّدٌ خَيْرُ مَنْ يَمْشِي عَلَى قَدَمٍ", "مُحَمَّدُ طَـــــــابَتِ الدُّنيــــــــــــــــــا بِبِعْثَتِهِ               مُحَمَّدٌ جَـــــــــاءَ بالآياتِ وَالْحِـــــــــــــــــــكَمِ"],ans:2},
+      {s:"الإعراب",q:"ما الكتابة الصحيحة للعددين مع المعدود في العبارة السابقة؟",opts:["تسع - عشرون.", "تسعة عشرين.", "تسع - عشرين.", "تسعة عشرون."],ans:2},
+      {s:"صيغ الصرف والإعراب",q:"- أي الآيات الكريمة الآتية اشتملت (عددًا معطوفا)؟",opts:["\" وَحَمْلُهُ وَفِصَالُهُ ثَلَاثُونَ شَهْراً\" (الأحقاف 15)", "\"وأرسلناه إلى مئة ألف أو يزيدون\" (الصافات 147)", "\"في يوم كان مقداره خمسين ألف سنة\" (المعارج 4)", "\" إِنَّ هَذا أخي لَهُ تِسْعٌ وَتِسْعُونَ نَعْجَةً\" (ص 23)"],ans:3},
+      {s:"العدد والمعدود",q:"- أيُّ الجُمَلِ الآتية حَوَتْ اسم تفضيل؟",opts:["يا أسعد لقد أبدعت في الامتحان.", "أسعد والديك تنل رضا الله.", "أسعد الأب ابنه بهدية قيمة.", "المؤمن أسعد الخلائق يوم القيامة."],ans:3},
+      {s:"العدد والمعدود",q:"قال الشاعر  \"مَا أَحْسَنَ الدِّينَ وَالدُّنْيَا إِذَا اجْتَمَعَا                   وَأَقْبَحَ الكُفْرَ وَالْإِفْلَاسَ بِالرَّجُلِ!\" — مَا إِعْرَابُ كَلِمَةِ (الدِّينِ) فِي البَيْتِ السَّابِقِ؟",opts:["مَفْعُولٌ بِهِ مَنْصُوب وعلامته الفتحة.", "نَعْتٌ مُفْرَدٌ مَنْصُوب وعلامته الفتحة.", "فَاعِلٌ مَرْفُوع وعلامته الضمة.", "مبتدأ مرفوع وعلامته الضمة."],ans:0},
+      {s:"اسم التفضيل",q:"أي الجمل الآتية حوت (تشبيه بليغ)؟",opts:["أنتِ كالقمر في الحسن.", "المـــؤمن مـــــرآة أخيــــــــــــــــــه.", "كلام محمد كالشهد في الحلاوة.", "الناس كأسنان المشط في الاستواء."],ans:1},
+      {s:"الإعراب",q:"أي الجمل الآتية حوت (تشبيه تام)؟",opts:["العلم نور.", "جاسم كأنه أسد.", "محمد بحر في العطاء.", "زرتُ حديقة كأنها الفردوس في الجمال والبهاء."],ans:3},
+      {s:"التشبيه والبلاغة",q:"أي الجمل الآتية حوت (استعارة)؟",opts:["إن الرسول نور؛ فلنتبع سنته.", "أشرقت الشمس بضحكتها البهية.", "الأم في بيتها مثل النحلة، لا تعرف التعب.", "الأم مدرسة، فلنحسن إعدادها لهذه المسؤولية."],ans:1},
+      {s:"التشبيه والبلاغة",q:"أَيُّ الْأَبْيَاتِ الْآتِيَةِ تَضَمّنَت أُسْلوبًا إنشَائِيًّا؟",opts:["نَزَلَــت مُقَدِّمَـةُ المَصيــفِ حَميـــدَةً               وَيَـــــدُ الشِّتــاءِ جَديــدَةٌ لا تُنكـــــــــــــــرُ", "لَولا الَّذي غَــــرَسَ الشِتــاءُ بِكَفِّـــــــــــــــهِ               لاقى المَصيفُ هَشائِماً لا تُثمِـــرُ", "يــــــــــا صــــــــــاحِبَــيّ تَقَصَّيـــــــــــــا نَظَرَيكُمــا                تَرَيا وُجوهَ الأَرضِ كَيفَ تصَـــــوَّرُ", "أَضحَت تَصوغُ بُطونُها لِظُهورِها     نَـــــــــــوْراً تَكـــــــــــادُ لَــــــــهُ القُلــــــوبُ تُنَوِّرُ"],ans:2},
+      {s:"التشبيه والبلاغة",q:"أَيُّ الجمل الْآتِيَةِ تَضَمّنَت جناسا تاما؟",opts:["ارعَ الجارَ ولو جار.", "دوام الحال من المحال", "العين بصيرة واليد قصيرة", "اللهم حَسّنْ خُلقي كما حسنت خَلْقِي"],ans:0}
+    ]
+  },
+
+  // ── SOCIAL UNIT 10: الهوية الثقافية في المجتمع القطري ──
+  {
+    id: 10, name: "الهوية الثقافية في المجتمع القطري", subject: "الدراسات الاجتماعية", icon: "🗺️", color: "#e65100",
+    timer: 1500,
+    questions: [
+      {s:"الوحدة الثالثة",q:"الخصائص الفكرية والروحية والمادية التي تميز مجتمعا ما : يشير التعريف لمفهوم:",opts:["الثقافة","الهوية","العولمة","التقاليد"],ans:0},
+      {s:"الوحدة الثالثة",q:"مجموعة الاحكام التي تعارف عليها أفراد المجتمع :",opts:["الأعراف","الأفكار","القانون","العادات"],ans:0},
+      {s:"الوحدة الثالثة",q:"العامل الأساسي في إحداث التغير في الثقافة القطرية :",opts:["نظام الحكم","العمالة الوافدة","المهن التقليدية","اكتشاف النفط"],ans:3},
+      {s:"الوحدة الثالثة",q:"أنشئ المبنى الأصلي لمتحف قطر الوطني في القصر القديم للشيخ :",opts:["عبد الله بن جاسم آل ثاني","علي بن عبد الله آل ثاني","احمد بن علي آل ثاني","خليفة بن حمد آل ثاني"],ans:0},
+      {s:"الوحدة الثالثة",q:"يعود تأسيس نادي الجسرة الثقافي إلى عام :",opts:["1950","1960","1970","1972"],ans:3},
+      {s:"الوحدة الثالثة",q:"صمم مبنى متحف قطر الوطني على شكل ظاهرة طبيعية تعرف باسم",opts:["النيم","القتنة","المخيط","القحوف"],ans:1},
+      {s:"الوحدة الثالثة",q:"أي المقومات التالية للأمن السياسي في دولة قطر ؟",opts:["الدستور","وزارة الداخلية","وزارة الخارجية","القوات المسلحة"],ans:0},
+      {s:"الوحدة الثالثة",q:"الجهة التي تتوالى سلطة التشريع في قطر",opts:["المجلس البلدي","مجلس الشورى","مجلس الوزراء","مجلس القضاء"],ans:1},
+      {s:"الوحدة الثالثة",q:"الهيئة التنفيذية العليا في دولة قطر :",opts:["مجلس الشورى","مجلس الوزراء","وزارة الداخلية","وزارة الخارجية"],ans:1},
+      {s:"الوحدة الثالثة",q:"تنظم مسائل الجنسية ودخول وإقامة الوافدين من اختصاصات :",opts:["لخويا","إدارة المرور","وزارة الداخلية","القوات المسلحة"],ans:2},
+      {s:"الوحدة الثالثة",q:"أحد اختصاصات القوات المسلحة :",opts:["تأمين المنشآت العامة","التجنيد للخدمة العسكرية","منع وقوع الجريمة","الحفاظ على الامن الداخلي"],ans:1},
+      {s:"الوحدة الثالثة",q:"باشرت وزارة الداخلية اختصاصاتها عام :",opts:["1970","1971م","1972 م","1973 م"],ans:1},
+      {s:"الوحدة الثالثة",q:"تم انشاء أول قسم للشرطة في مدينة الدوحة عام 1949 في :",opts:["مشيرب","سوق واقف","الريان","السد"],ans:0},
+      {s:"الوحدة الثالثة",q:"باشرت وزارة الداخلية بدولة قطر اختصاصاتها عام :",opts:["1970 م","1972 م","1974 م","1976 م"],ans:0},
+      {s:"الوحدة الثالثة",q:"إدارة مالية دولة قطر من اختصاصات مجلس :",opts:["الشورى","الوزراء","القضاء الأعلى","التعاون الخليجي"],ans:1},
+      {s:"الوحدة الثالثة",q:"القيم والتقاليد والمعتقدات إضافة الى الفنون والاداب هي من الجوانب التي تمثل :",opts:["الهوية","العولمة","العادات التقاليد","الثقافة"],ans:3},
+      {s:"الوحدة الثالثة",q:"هي المعتقدات والمبادئ التي يؤمن بها شعب ما ، مثل الصدق والأمانة والرحمة :",opts:["العادات","اللغة","الأعراف","القيم الدينية"],ans:3},
+      {s:"الوحدة الثالثة",q:"هي الأسلوب المتبع لدى أمة أو شعب في الحياة الاجتماعية :",opts:["العادات","اللغة","الأعراف","القيم الدينية"],ans:0},
+      {s:"الوحدة الثالثة",q:"من أهدافه دعم وتشجيع المواهب الشابة في دولة قطر :",opts:["مكتبة قطر الوطنية","دار الوثائق القطرية","متاحف قطر الوطنية","نادي الجسرة الثقافي"],ans:3},
+      {s:"الوحدة الثالثة",q:"يملئ أوقات فراغ الشباب بالمحاضرات والامسيات الشعرية :",opts:["مكتبة قطر الوطنية","دار الوثائق القطرية","متاحف قطر الوطنية","نادي الجسرة الثقافي"],ans:3}
+    ]
+  },
+
+  // ── SOCIAL UNIT 11: مشكلات بيئية ──
+  {
+    id: 11, name: "مشكلات بيئية", subject: "الدراسات الاجتماعية", icon: "🌍", color: "#bf360c",
+    timer: 1200,
+    questions: [
+      {s:"الوحدة الرابعة",q:'"الارتفاع المستمر في درجة حرارة الهواء القريب من سطح الأرض" يشير المفهوم إلى مصطلح:',opts:["ثقب الأوزون","التغير المناخي","المطر الحمضي","الاحتباس الحراري"],ans:3},
+      {s:"الوحدة الرابعة",q:'"التغيرات التي تحدث في طبقات الغلاف الجوي" يشير المفهوم إلى مصطلح:',opts:["التغير المناخي","الاحتباس الحراري","العواصف الرعدية","الأمطار الإعصارية"],ans:0},
+      {s:"الوحدة الرابعة",q:"الطبقة التي تحمي الأرض والكائنات الحية من الأشعة فوق البنفسجية الضارة:",opts:["التربوسفير","الإستراتوسفير","الميزوسفير","الأيونوسفير"],ans:1},
+      {s:"الوحدة الرابعة",q:"تُستخدم الهالونات في:",opts:["إطفاء الحرائق","صناعة الثلاجات","صناعة التكييفات","المبيدات الحشرية"],ans:0},
+      {s:"الوحدة الرابعة",q:"تنتج من احتراق وقود الطائرات النفاثة:",opts:["الفريون","الهالونات","أكاسيد النيتروجين","غاز بروميد الميثيل"],ans:2},
+      {s:"الوحدة الرابعة",q:"أي الغازات الاتية تستخدم في أنظمة إطفاء الحرائق القوية؟",opts:["الهالونات","أكاسيد النيتروجين","غاز بروميد الميثيل","الكلور فلور كربون"],ans:0},
+      {s:"الوحدة الرابعة",q:"يستخدم كمبيد حشري لحماية المحاصيل الزراعية:",opts:["الفريون","الهالونات","أكاسيد النيتروجين","غاز بروميد الميثيل"],ans:3},
+      {s:"الوحدة الرابعة",q:"غاز يستخدم كمادة مبردة في الثلاجات والتكييف:",opts:["الهالونات","الكلور فلور كربون","أكاسيد النيتروجين","غاز بروميد الميثيل"],ans:1},
+      {s:"الوحدة الرابعة",q:"التغيرات المناخية هي التي يتم قياسها على مدار:",opts:["يوم","شهر","عقود","أسبوع"],ans:2}
+    ]
+  },
+
+  // ── SOCIAL UNIT 12: الاستعمار الأوروبي للوطن العربي ──
+  {
+    id: 12, name: "الاستعمار الأوروبي للوطن العربي", subject: "الدراسات الاجتماعية", icon: "📜", color: "#d84315",
+    timer: 1200,
+    questions: [
+      {s:"الوحدة الخامسة - التاريخ",q:"خضعت سوريا للانتداب الفرنسي عام 1920 م بعد مؤتمر :",opts:["بلفور","إيفيان","سان ريمو","سايكس بيكو"],ans:2},
+      {s:"الوحدة الخامسة - التاريخ",q:"تزعم الثورة السورية الكبرى عام 1925 م :",opts:["صالح العلي","إبراهيم هنانو","رشيد علي الكيلاني","سلطان باشا الأطرش"],ans:3},
+      {s:"الوحدة الخامسة - التاريخ",q:"عدد السنوات التي استمر بها الاحتلال الفرنسي للجزائر :",opts:["122","132","142","152"],ans:1},
+      {s:"الوحدة الخامسة - التاريخ",q:"تزعم حزب الوفد في مصر :",opts:["سعد زغلول","أحمد عرابي","مصطفى كامل","عبد الكريم قاسم"],ans:0},
+      {s:"الوحدة الخامسة - التاريخ",q:"وقعت بريطانيا وفرنسا اتفاقية سرية عام 1916 م أطلق عليها معاهدة :",opts:["وعد بلفور","سان ريمو","سايكس بيكو","السلام البحري"],ans:2},
+      {s:"الوحدة الخامسة - التاريخ",q:"تم تقسيم المنطقة العربية بين بريطانيا وفرنسا بموجب مؤتمر:",opts:["فيينا","برلين","باندونغ","سان ريمو"],ans:3},
+      {s:"الوحدة الخامسة - التاريخ",q:"الترتيب التصاعدي لأحداث الاستعمار البريطاني للعراق :",opts:["احتلال بريطانيا البصرة – احتلال بريطانيا لبغداد – ثورة العشرين – إعلان النظام الجمهوري","احتلال بريطانيا لبغداد – ثورة العشرين - إعلان النظام الجمهوري - احتلال بريطانيا للبصرة","ثورة العشرين – احتلال بريطانيا للبصرة – إعلان النظام الجمهوري – احتلال بريطانيا لبغداد","إعلان النظام الجمهوري – احتلال بريطانيا للبصرة – احتلال بريطانيا لبغداد – ثورة العشرين"],ans:0},
+      {s:"الوحدة الخامسة - التاريخ",q:"قادة الجيش المصري عام 1882 م احمد عرابي معركة :",opts:["الريدانية","مرج دابق","جالديرن","التل الكبير"],ans:3},
+      {s:"الوحدة الخامسة - التاريخ",q:"ثورة أدت الى تغير سياسة حكم العراق من نظام عسكري مباشر الى نظام مدني غير مباشر:",opts:["ثورة العشرين","ثورة عبد الكريم قاسم","الثورة العرابية","ثورة 1919"],ans:0},
+      {s:"الوحدة الخامسة - التاريخ",q:"أي الشخصيات الآتية قادة الثورة الجزائرية ضد الاستعمار الفرنسي عام 1847 م :",opts:["هواري بومدين","احمد بن بلة","الحبيب بورقيبة","الأمير عبد القادر الجزائري"],ans:3}
+    ]
+  },
+
+  // ── ENGLISH UNIT 13: Language Functions (Communication) ──
+  {
+    id: 13, name: "Language Functions", subject: "اللغة الإنجليزية", icon: "💬", color: "#1a6b9e",
+    timer: 1800, dir: "ltr",
+    questions: [
+      {s:"Language Functions",dir:"ltr",q:"Taher: This boy has been crying for a long time.\nSamer: ______",opts:["It's up to you.","I think so.","Do as you please.","He drives me up the wall."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Jaber: Did you like the TV show?\nFahad: ______",opts:["Is that it?","I'm positive.","Don't worry!","Overall, it was OK."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Waleed: How did you find the show?\nAli: ______",opts:["Overall, it was OK.","Make up your mind.","You can say that again.","I really don't understand why."],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Nasser: The last thing to do is to press the button.\nSaleh: ______",opts:["Hello!","Is that it?","Never mind.","How are you?"],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"Maha: I think the computer is the most important invention ever.\nSalma: ______",opts:["What a pity!","Count me in!","I'd rather not. I have other plans.","You are right. It saves time and effort."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Khaled: Hey! What's wrong with the referee? That wasn't a foul!\nOmar: ______",opts:["That's really bad for you.","You should make up your mind.","Look at Jameson! What a player!","We're going to lose because of him."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Salman: I've never seen such a terrible match.\nSalem: ______",opts:["What a shame!","It was fantastic.","Are you thrilled?","How interesting!"],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Sally: Could you lend me £15?\nSamera: ______",opts:["How awful!","What a shame!","I can't believe it!","How can I say no? Here you go."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Alaa: How did you feel when you heard the fire alarm?\nMajed: ______",opts:["It's driving me up the wall.","I went as red as a beetroot.","I nearly jumped out of my skin.","I wanted the ground to open up and swallow me."],ans:2},
+      {s:"Language Functions",dir:"ltr",q:"How about playing tennis next weekend?",opts:["I give up.","Check it out!","Good idea!","Make up your mind."],ans:2},
+      {s:"Language Functions",dir:"ltr",q:"My brother lost his new mobile phone.",opts:["I am red as a beetroot.","I can't believe my eyes.","I feel sorry for him.","He drives me up the wall."],ans:2},
+      {s:"Language Functions",dir:"ltr",q:"Did you like that game?",opts:["Count me in.","I'm hungry.","Don't worry!","Overall, it's nothing special."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"This is a useful machine. It saves time and effort.",opts:["I agree with you.","Maybe, next week!","You can say that again.","Will you change your mind?"],ans:2},
+      {s:"Language Functions",dir:"ltr",q:"Are you sure you have the right location?",opts:["I'm positive.","It's up to you.","You poor thing!","Why the long face?"],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Do you fancy going to the cinema?",opts:["Check it out!","Don't worry.","I would rather not.","You should call the police."],ans:2},
+      {s:"Language Functions",dir:"ltr",q:"I'm not certain if I should buy this camera.",opts:["I give up.","I really doubt it.","I have some other plans.","You should make up your mind."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Would you give me a hand, please? This suitcase is too heavy.",opts:["Sure, I will.","No, thanks!","Not too bad!","Sorry to hear that."],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Do you know that my phone got broken last week?",opts:["What a pity!","Got to go now.","Nice to see you.","What wonderful news!"],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Are you sure the museum is open today?",opts:["I give up.","I'm positive.","Count me in.","Long time no see!"],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"What do you think of FIFA World Cup, Qatar 2022?",opts:["That's a great idea.","It's something else.","I'm very well, thanks!","I couldn't agree more."],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"How about having a barbecue?",opts:["Look out!","That's a good idea!","How dare you!","Long time no see!"],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"Are you coming to the get-together this evening?",opts:["I give up.","I'm not sure.","I agree with you.","Make up your mind."],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"Are you sure it is the right username?",opts:["Good luck.","I'm positive.","Count me in.","I'd rather not."],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"I passed all my grade 9 exams.",opts:["Poor you!","Who knows?","That's too bad.","What a surprise!"],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Could I have a look at your new laptop?",opts:["Of course.","I'm afraid.","I don't care.","Who knows?"],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Long time no see.",opts:["I'm off.","Goodbye!","It's something else.","Fancy meeting you here."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"What are you doing this evening?",opts:["I like pizza.","Nothing much!","It's a piece of cake.","It's not my favourite."],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"I am not feeling well.",opts:["It's a good idea!","I'm sorry to hear that.","Hope to see you soon.","I look forward to meeting you."],ans:1},
+      {s:"Language Functions",dir:"ltr",q:"I lost the final game.",opts:["How exciting!","I don't think so.","What a nice weather!","How disappointing."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"How did you feel when you hit the street post?",opts:["I lost my wallet.","I drank some coffee.","I laughed at the joke.","I nearly jumped out of my skin."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Are you ready for the sea cruise?",opts:["I can't believe my eyes.","I totally agree with you.","No, I didn't pass the test.","Yes, I've planned everything."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Their kids are so noisy.",opts:["How exciting!","That's amazing!","You should relax.","They drive me up the wall."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Waleed: Luckily, I could pass all my exams.\nKhaled: ______",opts:["Look out!","I don't agree.","Call the police, now!","I'm really happy for you."],ans:3},
+      {s:"Language Functions",dir:"ltr",q:"Maha: I lost my new mobile yesterday.\nSalma: ______",opts:["You poor thing!","That's really good news.","I might visit my classmate.","I think it is very nice on you."],ans:0},
+      {s:"Language Functions",dir:"ltr",q:"Ali: This game is interesting. I think I will buy it.\nHamad: ______",opts:["How sad!","Yes, go for it!","I'd rather travel to the UK.","It's one of the biggest events."],ans:1}
+    ]
+  },
+
+  // ── ENGLISH UNIT 14: Grammar ──
+  {
+    id: 14, name: "Grammar", subject: "اللغة الإنجليزية", icon: "📝", color: "#0d4f77",
+    timer: 1200, dir: "ltr",
+    questions: [
+      {s:"How/So – What/Such",dir:"ltr",q:"I was ______ tired last night that I ended up sleeping on the sofa.",opts:["such","how","so","what"],ans:2},
+      {s:"How/So – What/Such",dir:"ltr",q:"We always have to queue at the shop. It's ______ an annoying time.",opts:["such","how","so","what"],ans:0},
+      {s:"How/So – What/Such",dir:"ltr",q:"I left my mobile phone at the office. ______ a nightmare!",opts:["such","how","so","what"],ans:3},
+      {s:"Modals",dir:"ltr",q:"You needn't ______ a ball with you. I have already bought one.",opts:["take","took","taken","taking"],ans:0},
+      {s:"Modals",dir:"ltr",q:"You ______ be over fifteen to take part in the race.",opts:["need","must","have","don't need"],ans:1},
+      {s:"Passive Voice",dir:"ltr",q:"Al-Bait Stadium ______ two years ago.",opts:["built","builds","is built","was built"],ans:3},
+      {s:"Passive Voice",dir:"ltr",q:"30,000 cars ______ every year.",opts:["make","made","is made","are made"],ans:3},
+      {s:"Passive Voice",dir:"ltr",q:"Last night, the schoolchildren ______ around the stadium.",opts:["show","shown","was shown","were shown"],ans:3},
+      {s:"Passive Voice",dir:"ltr",q:"Newspaper ______ to my house every morning.",opts:["delivers","delivered","is delivered","was delivered"],ans:2},
+      {s:"Infinitive & Gerund",dir:"ltr",q:"I went to the shop ______ some milk.",opts:["get","gets","to get","getting"],ans:2},
+      {s:"Infinitive & Gerund",dir:"ltr",q:"Will you let me ______ you with your homework?",opts:["help","helps","to help","helping"],ans:0},
+      {s:"Infinitive & Gerund",dir:"ltr",q:"How about ______ to the zoo?",opts:["go","to go","goes","going"],ans:3},
+      {s:"Infinitive & Gerund",dir:"ltr",q:"I enjoy ______ sandwiches.",opts:["make","to make","makes","making"],ans:3},
+      {s:"Infinitive & Gerund",dir:"ltr",q:"______ will help me relax.",opts:["walk","to walk","walks","walking"],ans:3},
+      {s:"If Type 2 & Wishes",dir:"ltr",q:"If I ______ you, I would visit a foreign country.",opts:["was","were","am","is"],ans:1},
+      {s:"If Type 2 & Wishes",dir:"ltr",q:"If I had money, I ______ you some.",opts:["lend","lent","would lend","will lend"],ans:2},
+      {s:"If Type 2 & Wishes",dir:"ltr",q:"I wish I ______ visit Scotland in the future.",opts:["can","could","was","were"],ans:1},
+      {s:"If Type 2 & Wishes",dir:"ltr",q:"I'm late again. I wish I ______ my alarm for 6.00 a.m.",opts:["set","has set","have set","had set"],ans:3},
+      {s:"Reported Speech",dir:"ltr",q:"Ameena ______ that she would help out with the housework.",opts:["said","told","ask","say"],ans:0},
+      {s:"Reported Speech",dir:"ltr",q:"My boss ______ me to work overtime.",opts:["said","told","ask","say"],ans:1}
+    ]
+  },
+
+  // ── ENGLISH UNIT 15: Reading ──
+  {
+    id: 15, name: "Reading", subject: "اللغة الإنجليزية", icon: "📖", color: "#14547a",
+    timer: 1800, dir: "ltr",
+    questions: [
+      {s:"Text 1: The Importance of Sleep",dir:"ltr",
+       passage:"Do you wake up feeling fresh and alert in the morning or do you drag yourself out of bed most of the time? If you don't have at least eight hours of sleep each night, over time, your health will suffer.\n\nMissing an hour or two of sleep for a few days will have an effect on your concentration and performance. However, sleeping more than the recommended hours does not necessarily mean that you will do better or accomplish more. Rather, oversleeping is quite similar to overeating. It makes you feel lethargic and your concentration span becomes shorter too.\n\nHaving at least eight hours of sleep boosts our immunity. People who adopt a good night's sleep pattern generally have stronger immunity. For many, especially women, compromising on their beauty sleep is impossible. When you sleep, your body repairs and regenerates skin, blood and brain cells. Our skin glows and our hair shines when we have enough sleep. People who are deprived of sleep usually have dark rings under their eyes.\n\nWhen you are healthy, everything seems to fall into place. You are able to perform better. You feel less stressful and can absorb and retain information more accurately. Handling tasks is a breeze as you make fewer mistakes. More importantly, for people who drive, their reaction towards an emergency is faster. That in turn reduces accident rates. Overall, having enough sleep also makes you less short-tempered, aggressive and paranoid.",
+       q:"What is the text MAINLY about?",opts:["The effects of lack of sleep on human skin","What happens to our bodies during sleep","The benefits of good sleep on our daily life","The difference between overeating and oversleeping"],ans:2},
+      {s:"Text 1: The Importance of Sleep",dir:"ltr",
+       passage:"Do you wake up feeling fresh and alert in the morning or do you drag yourself out of bed most of the time? If you don't have at least eight hours of sleep each night, over time, your health will suffer.\n\nMissing an hour or two of sleep for a few days will have an effect on your concentration and performance. However, sleeping more than the recommended hours does not necessarily mean that you will do better or accomplish more. Rather, oversleeping is quite similar to overeating. It makes you feel lethargic and your concentration span becomes shorter too.\n\nHaving at least eight hours of sleep boosts our immunity. People who adopt a good night's sleep pattern generally have stronger immunity. For many, especially women, compromising on their beauty sleep is impossible. When you sleep, your body repairs and regenerates skin, blood and brain cells. Our skin glows and our hair shines when we have enough sleep. People who are deprived of sleep usually have dark rings under their eyes.\n\nWhen you are healthy, everything seems to fall into place. You are able to perform better. You feel less stressful and can absorb and retain information more accurately. Handling tasks is a breeze as you make fewer mistakes. More importantly, for people who drive, their reaction towards an emergency is faster. That in turn reduces accident rates. Overall, having enough sleep also makes you less short-tempered, aggressive and paranoid.",
+       q:"What does the underlined word \"concentration\" in paragraph 2 mean?",opts:["attention","convention","movement","reaction"],ans:0},
+      {s:"Text 2: Mountain Gorillas",dir:"ltr",
+       passage:"What would you do if you saw a mountain gorilla? Most people would probably be very afraid and run away! That's because gorillas have a very frightening appearance. Firstly, gorillas are huge. They can grow up to 2 metres tall and can weigh more than 200 kilograms. Secondly, gorillas can make a lot of noise. They can roar, bang their chests, and show their teeth. In fact, these aggressive displays are very rare and male gorillas only do it when they are protecting their families.\n\nThe truth is, gorillas are incredibly intelligent, gentle and social animals that stay together in small family groups. The leader is the largest male, called the silverback. That's because of the beautiful silver fur on its back. They spend almost all of their time on the forest floor, eating and sleeping. They are mainly vegetarian, although they eat some insects. Young gorillas often play together. They run around and climb trees. At night the animals make a nest to sleep in. Gorillas rarely attack humans.\n\nSadly, there are fewer than 650 mountain gorillas left in the wild which only live in the mountain jungles of Zaire, Rwanda and Uganda. They are an endangered species because people hunt them for food and for trophies. Humans cut down their forests for farmland, fuel and housing.",
+       q:"What is the text mainly about?",opts:["The diet of mountain gorillas","Cutting down forests for farmland","Information about mountain gorillas","The jungles of Zaire, Rwanda and Uganda"],ans:2},
+      {s:"Text 2: Mountain Gorillas",dir:"ltr",
+       passage:"What would you do if you saw a mountain gorilla? Most people would probably be very afraid and run away! That's because gorillas have a very frightening appearance. Firstly, gorillas are huge. They can grow up to 2 metres tall and can weigh more than 200 kilograms. Secondly, gorillas can make a lot of noise. They can roar, bang their chests, and show their teeth. In fact, these aggressive displays are very rare and male gorillas only do it when they are protecting their families.\n\nThe truth is, gorillas are incredibly intelligent, gentle and social animals that stay together in small family groups. The leader is the largest male, called the silverback. That's because of the beautiful silver fur on its back. They spend almost all of their time on the forest floor, eating and sleeping. They are mainly vegetarian, although they eat some insects. Young gorillas often play together. They run around and climb trees. At night the animals make a nest to sleep in. Gorillas rarely attack humans.\n\nSadly, there are fewer than 650 mountain gorillas left in the wild which only live in the mountain jungles of Zaire, Rwanda and Uganda. They are an endangered species because people hunt them for food and for trophies. Humans cut down their forests for farmland, fuel and housing.",
+       q:"What does the underlined word \"intelligent\" in paragraph 2 mean?",opts:["active","fast","lazy","smart"],ans:3},
+      {s:"Text 3: Video Games Are Good for You!",dir:"ltr",
+       passage:"For years, video games have been criticized for making people antisocial, overweight, or depressed. However, recent studies show that video games can actually have positive effects on both our bodies and minds.\n\nVideo games can help improve physical skills. For example, young children who play interactive games show better motor skills, such as kicking, catching, and throwing a ball. In one study, surgeons who played video games were faster and made fewer mistakes during surgeries than those who didn't play. Playing games can also improve vision, especially in telling the difference between shades of grey, which is helpful for driving at night or flying a plane.\n\nGames can also boost brain functions like decision-making. People who play action games make decisions faster and just as accurately as those who don't play. Experienced gamers can make choices up to six times per second. Video games also help improve multitasking skills, allowing players to keep track of more things at once. Additionally, playing video games can reduce gender differences, as women who play games perform better at tasks involving 3D thinking.\n\nVideo games can also help with mental health. One study found that a game called SPARX helped reduce symptoms of depression more than traditional treatments. However, some studies show that violent video games can lead to more aggressive behaviour. Despite this, some researchers believe that violent games may still have positive effects on brain development. In the future, video games might be used to treat physical and mental health problems.",
+       q:"What is the main purpose of the article?",opts:["The negative effects of video games on health","The impact of violent video games on behavior","The history of video games and their development","How video games can improve physical and mental skills"],ans:3},
+      {s:"Text 3: Video Games Are Good for You!",dir:"ltr",
+       passage:"For years, video games have been criticized for making people antisocial, overweight, or depressed. However, recent studies show that video games can actually have positive effects on both our bodies and minds.\n\nVideo games can help improve physical skills. For example, young children who play interactive games show better motor skills, such as kicking, catching, and throwing a ball. In one study, surgeons who played video games were faster and made fewer mistakes during surgeries than those who didn't play. Playing games can also improve vision, especially in telling the difference between shades of grey, which is helpful for driving at night or flying a plane.\n\nGames can also boost brain functions like decision-making. People who play action games make decisions faster and just as accurately as those who don't play. Experienced gamers can make choices up to six times per second. Video games also help improve multitasking skills, allowing players to keep track of more things at once. Additionally, playing video games can reduce gender differences, as women who play games perform better at tasks involving 3D thinking.\n\nVideo games can also help with mental health. One study found that a game called SPARX helped reduce symptoms of depression more than traditional treatments. However, some studies show that violent video games can lead to more aggressive behaviour. Despite this, some researchers believe that violent games may still have positive effects on brain development. In the future, video games might be used to treat physical and mental health problems.",
+       q:"In paragraph 3, what is the closest meaning of the underlined word \"boost\"?",opts:["to decrease or lower","to improve or increase","to ignore or forget","to remove or destroy"],ans:1},
+      {s:"Text 3: Video Games Are Good for You!",dir:"ltr",
+       passage:"For years, video games have been criticized for making people antisocial, overweight, or depressed. However, recent studies show that video games can actually have positive effects on both our bodies and minds.\n\nVideo games can help improve physical skills. For example, young children who play interactive games show better motor skills, such as kicking, catching, and throwing a ball. In one study, surgeons who played video games were faster and made fewer mistakes during surgeries than those who didn't play. Playing games can also improve vision, especially in telling the difference between shades of grey, which is helpful for driving at night or flying a plane.\n\nGames can also boost brain functions like decision-making. People who play action games make decisions faster and just as accurately as those who don't play. Experienced gamers can make choices up to six times per second. Video games also help improve multitasking skills, allowing players to keep track of more things at once. Additionally, playing video games can reduce gender differences, as women who play games perform better at tasks involving 3D thinking.\n\nVideo games can also help with mental health. One study found that a game called SPARX helped reduce symptoms of depression more than traditional treatments. However, some studies show that violent video games can lead to more aggressive behaviour. Despite this, some researchers believe that violent games may still have positive effects on brain development. In the future, video games might be used to treat physical and mental health problems.",
+       q:"In paragraph 1, what have video games been criticized for?",opts:["Increasing brain function","Helping improve physical health","Enhancing decision-making skills","Making people antisocial, overweight, or depressed"],ans:3},
+      {s:"Text 3: Video Games Are Good for You!",dir:"ltr",
+       passage:"For years, video games have been criticized for making people antisocial, overweight, or depressed. However, recent studies show that video games can actually have positive effects on both our bodies and minds.\n\nVideo games can help improve physical skills. For example, young children who play interactive games show better motor skills, such as kicking, catching, and throwing a ball. In one study, surgeons who played video games were faster and made fewer mistakes during surgeries than those who didn't play. Playing games can also improve vision, especially in telling the difference between shades of grey, which is helpful for driving at night or flying a plane.\n\nGames can also boost brain functions like decision-making. People who play action games make decisions faster and just as accurately as those who don't play. Experienced gamers can make choices up to six times per second. Video games also help improve multitasking skills, allowing players to keep track of more things at once. Additionally, playing video games can reduce gender differences, as women who play games perform better at tasks involving 3D thinking.\n\nVideo games can also help with mental health. One study found that a game called SPARX helped reduce symptoms of depression more than traditional treatments. However, some studies show that violent video games can lead to more aggressive behaviour. Despite this, some researchers believe that violent games may still have positive effects on brain development. In the future, video games might be used to treat physical and mental health problems.",
+       q:"What does the second paragraph suggest about surgeons who play video games?",opts:["They are faster and make fewer mistakes during surgeries","They have better vision than those who don't play video games","They make more mistakes than those who don't play video games","They are slower at performing surgeries than those who don't play"],ans:0}
+    ]
+  },
+
+  // ── ENGLISH UNIT 16: Vocabulary ──
+  {
+    id: 16, name: "Vocabulary", subject: "اللغة الإنجليزية", icon: "📚", color: "#1a6b9e",
+    timer: 1200, dir: "ltr",
+    questions: [
+      {s:"Vocabulary",dir:"ltr",q:"My dad has already bought a fridge. Yet, we still need a washing ______.",opts:["stove","ceiling","blender","machine"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"My brother's laptop is ______ to yours.",opts:["alike","like","same","similar"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"My car broke ______ while I was driving home.",opts:["up","on","out","down"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"Ammar got the best ______ on the online game we had yesterday.",opts:["plot","score","scene","platform"],ans:1},
+      {s:"Vocabulary",dir:"ltr",q:"My mother has already bought all the ______ to make pizza tonight except for the olives.",opts:["books","kilograms","donations","ingredients"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"Ali was afraid because he ______ the ball and broke his neighbour's window.",opts:["kicked","passed","dribbled","bounced"],ans:0},
+      {s:"Vocabulary",dir:"ltr",q:"After their father's death, they had to sell the house due to ______ problems.",opts:["casual","special","financial","historical"],ans:2},
+      {s:"Vocabulary",dir:"ltr",q:"She will wear a ______ to protect her head.",opts:["wetsuit","helmet","board","stick"],ans:1},
+      {s:"Vocabulary",dir:"ltr",q:"Sara wears ______ underwater.",opts:["net","goal","goggles","helmet"],ans:2},
+      {s:"Vocabulary",dir:"ltr",q:"He used the ______ to hit the ball in tennis.",opts:["board","stick","goggles","racket"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"My friend hits the ball over the ______ while playing volleyball.",opts:["net","helmet","goggles","board"],ans:0},
+      {s:"Vocabulary",dir:"ltr",q:"They wear a ______ when they go scuba diving.",opts:["wetsuit","helmet","board","stick"],ans:0},
+      {s:"Vocabulary",dir:"ltr",q:"He is ______ about his last exam result.",opts:["scared","allergic","popular","nervous"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"My parents and teachers are ______ of me because I got full marks in all subjects.",opts:["responsible","excited","satisfied","proud"],ans:3},
+      {s:"Vocabulary",dir:"ltr",q:"I am very ______ about Ali; it is 12:00 am and he is not home yet.",opts:["worried","full","suitable","addicted"],ans:0},
+      {s:"Vocabulary",dir:"ltr",q:"Qatar is ______ for its kind people and big malls.",opts:["disappointed","married","popular","afraid"],ans:2},
+      {s:"Vocabulary",dir:"ltr",q:"The car you bought last week is ______ to mine.",opts:["similar","terrified","curious","ready"],ans:0},
+      {s:"Vocabulary",dir:"ltr",q:"When I realized I had introduced my boss with a wrong name, I went ______ as a beetroot.",opts:["white","red","pink","blue"],ans:1},
+      {s:"Vocabulary",dir:"ltr",q:"Linda couldn't believe her ______ when she waved at the monkey and it waved back.",opts:["fingers","hands","ears","eyes"],ans:3}
+    ]
+  }
+];
+
+/* ============================================================
+   STATE
+============================================================ */
+let student = { name:"", grade:"", section:"" };
+let unitScores = new Array(30).fill(null); // 25 وحدة
+let currentUnit = null;
+let currentSubject = null;
+let answers = {}, startTime, timerInterval, timeLeft;
+let pendingEntry, pendingScore, pendingElapsed, pendingSects;
+
+/* INIT moved to end */
+
+/* ============================================================
+   RESUME SCREEN — شاشة الترحيب بالعائد
+============================================================ */
+function renderResumeScreen(){
+  hideAllScreens();
+  const rs = document.getElementById('resume-screen');
+  if(!rs) return;
+  rs.style.display = 'block';
+
+  const stats = getStudentStats();
+  const progressPct = stats.totalUnits > 0 ? Math.round(stats.completedUnits/stats.totalUnits*100) : 0;
+
+  // آخر 3 وحدات نشطة
+  const h = loadHistory();
+  const recentUnits = UNITS
+    .filter(u => (h.units[u.id]||[]).length > 0)
+    .sort((a,b) => {
+      const da = (h.units[a.id]||[]).slice(-1)[0]?.date || '';
+      const db = (h.units[b.id]||[]).slice(-1)[0]?.date || '';
+      return db.localeCompare(da);
+    })
+    .slice(0, 4);
+
+  // أيضاً: وحدات لم تُكتمل بعد
+  const pendingUnits = UNITS.filter(u => {
+    const subj = SUBJECTS_CATALOGUE.find(s => s.unitIds.includes(u.id) && s.available);
+    return subj && !(h.units[u.id]||[]).length;
+  }).slice(0, 2);
+
+  const recentHtml = recentUnits.map(u => {
+    const best = getBest(u.id);
+    const scoreClass = best ? (best.pct>=80?'high':best.pct>=60?'mid':'low') : 'none';
+    const scoreLabel = best ? best.pct + '%' : 'لم تبدأ';
+    return `
+      <div class="resume-unit-chip" onclick="quickStartUnit(${u.id})" style="cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(201,150,58,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.1)'">
+        <div class="resume-unit-icon">${u.icon}</div>
+        <div>
+          <div class="resume-unit-name">${u.name}</div>
+          <div style="font-size:.74rem;color:rgba(255,255,255,.35)">${u.subject}</div>
+        </div>
+        <div class="resume-unit-score ${scoreClass}">${scoreLabel}</div>
+      </div>`;
+  }).join('');
+
+  const pendingHtml = pendingUnits.length ? `
+    <div class="resume-last-title" style="margin-top:14px">⏳ وحدات لم تبدأها بعد</div>
+    ${pendingUnits.map(u => `
+      <div class="resume-unit-chip" onclick="quickStartUnit(${u.id})" style="cursor:pointer;opacity:.7;transition:all .2s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">
+        <div class="resume-unit-icon">${u.icon}</div>
+        <div>
+          <div class="resume-unit-name">${u.name}</div>
+          <div style="font-size:.74rem;color:rgba(255,255,255,.35)">${u.subject}</div>
+        </div>
+        <div class="resume-unit-score none">ابدأ الآن</div>
+      </div>`).join('')}` : '';
+
+  rs.innerHTML = `
+    <div class="resume-card">
+      <div class="resume-avatar">👋</div>
+      <div class="resume-welcome">أهلاً، ${student.name}!</div>
+      <div class="resume-sub">مرحباً بك مجدداً • الصف ${student.grade} | الشعبة ${student.section}</div>
+
+      <div class="resume-stats-row">
+        <div class="resume-stat">
+          <div class="resume-stat-val">${stats.completedUnits}</div>
+          <div class="resume-stat-label">وحدة مكتملة</div>
+        </div>
+        <div class="resume-stat">
+          <div class="resume-stat-val">${stats.avgBest}%</div>
+          <div class="resume-stat-label">متوسط أفضل الدرجات</div>
+        </div>
+        <div class="resume-stat">
+          <div class="resume-stat-val">${stats.totalAttempts}</div>
+          <div class="resume-stat-label">محاولة كاملة</div>
+        </div>
+      </div>
+
+      <div class="resume-progress-label">
+        <span>📊 التقدم الكلي</span>
+        <span>${stats.completedUnits} / ${stats.totalUnits} وحدة</span>
+      </div>
+      <div class="resume-progress-bar">
+        <div class="resume-progress-fill" style="width:${progressPct}%"></div>
+      </div>
+
+      ${recentUnits.length ? `<div class="resume-last-section">
+        <div class="resume-last-title">🕐 آخر الوحدات التي تدرّبت عليها</div>
+        ${recentHtml}
+        ${pendingHtml}
+      </div>` : ''}
+
+      <div class="resume-actions">
+        <button class="resume-btn-primary" onclick="continueSession()">
+          ${stats.completedUnits > 0 ? '🚀 تابع من حيث توقفت' : '🎯 ابدأ التدريب الآن'}
+        </button>
+        <button class="resume-btn-secondary" onclick="toggleNewStudentForm()">
+          👤 تسجيل دخول بحساب آخر
+        </button>
+      </div>
+
+      <div class="new-student-form" id="new-student-form">
+        <div class="form-group"><label>👤 الاسم الكامل</label><input type="text" id="sname2" placeholder="أدخل اسمك الكامل" maxlength="80"/></div>
+        <div class="form-group" style="margin-top:10px"><label>📚 الصف</label>
+          <select id="sgrade2"><option value="">-- اختر الصف --</option><option value="التاسع">التاسع</option></select>
+        </div>
+        <div class="form-group" style="margin-top:10px"><label>🏫 الشعبة</label>
+          <select id="ssection2"><option value="">-- اختر الشعبة --</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+        <button class="resume-btn-primary" style="margin-top:14px" onclick="switchStudent()">✅ دخول</button>
+      </div>
+    </div>
+  `;
+
+  // تأثير ظهور شريط التقدم بعد لحظة
+  setTimeout(() => {
+    const fill = rs.querySelector('.resume-progress-fill');
+    if(fill) fill.style.width = progressPct + '%';
+  }, 300);
+}
+
+function continueSession(){
+  hideAllScreens();
+  const subjectScreen = document.getElementById('subject-screen');
+  if(subjectScreen){ subjectScreen.style.display='block'; subjectScreen.classList.add('active'); }
+  renderSubjectScreen();
+}
+
+function quickStartUnit(unitId){
+  const unit = UNITS.find(u => u.id === unitId);
+  if(!unit) return;
+  const subj = SUBJECTS_CATALOGUE.find(s => s.unitIds.includes(unitId));
+  if(subj){ currentSubject = subj; applySubjectTheme(subj.id); }
+  startUnit(unitId);
+}
+
+function toggleNewStudentForm(){
+  const f = document.getElementById('new-student-form');
+  if(!f) return;
+  f.style.display = f.style.display === 'none' || !f.style.display ? 'block' : 'none';
+}
+
+function switchStudent(){
+  const n = document.getElementById('sname2')?.value.trim();
+  const g = document.getElementById('sgrade2')?.value;
+  const sec = document.getElementById('ssection2')?.value;
+  if(!n || !g || !sec){ alert('يرجى إكمال البيانات'); return; }
+  student = { name: n, grade: g, section: sec };
+  unitScores = new Array(30).fill(null);
+  restoreUnitScores();
+  saveLastStudent(n, g, sec);
+  sendRegistrationToSheets(n, g, sec);
+  continueSession();
+}
+
+
+/* ============================================================
+   SCREEN HELPERS
+============================================================ */
+function hideAllScreens(){
+  document.querySelectorAll('.screen,[id$="-screen"]').forEach(s=>{
+    s.style.display='none';
+    s.classList.remove('active');
+  });
+  const tb=document.getElementById('timer-bar');
+  if(tb) tb.classList.remove('show');
+}
+
+function showScreen(id) {
+  hideAllScreens();
+  const t = document.getElementById(id);
+  if(t){t.style.display='block';t.classList.add('active');}
+}
+
+
+/* ============================================================
+   SUBJECTS CATALOGUE — أضف مواد جديدة هنا فقط
+============================================================ */
+const SUBJECTS_CATALOGUE = [
+  {
+    id: 'science',
+    name: 'العلوم',
+    icon: '🔬',
+    desc: 'الأمراض الانتقالية • التكاثر • الكون المرئي',
+    color: '#B11B49',
+    shadow: 'rgba(177,27,73,.25)',
+    grad: 'linear-gradient(135deg,rgba(177,27,73,.18),rgba(177,27,73,.05))',
+    stats: '3 وحدات • 87 سؤال',
+    available: true,
+    unitIds: [0, 1, 2],
+  },
+  {
+    id: 'islamic',
+    name: 'التربية الإسلامية',
+    icon: '🕌',
+    desc: 'أحكام الآيات • الأحاديث • السيرة النبوية • الأحكام الشرعية',
+    color: '#1b5e20',
+    shadow: 'rgba(27,94,32,.25)',
+    grad: 'linear-gradient(135deg,rgba(27,94,32,.18),rgba(27,94,32,.05))',
+    stats: 'وحدتان • 42 سؤال',
+    available: true,
+    unitIds: [7, 8],
+  },
+  {
+    id: 'arabic',
+    name: 'اللغة العربية',
+    icon: '✍️',
+    desc: 'البلاغة • القواعد • الأساليب اللغوية • التشبيه والجناس',
+    color: '#4a148c',
+    shadow: 'rgba(74,20,140,.25)',
+    grad: 'linear-gradient(135deg,rgba(74,20,140,.18),rgba(74,20,140,.05))',
+    stats: 'وحدة • 18 سؤال',
+    available: true,
+    unitIds: [9],
+  },
+  {
+    id: 'english',
+    name: 'اللغة الإنجليزية',
+    icon: '🌐',
+    desc: 'Communication • Grammar • Reading • Vocabulary',
+    color: '#1a6b9e',
+    shadow: 'rgba(26,107,158,.25)',
+    grad: 'linear-gradient(135deg,rgba(26,107,158,.18),rgba(26,107,158,.05))',
+    stats: '4 وحدات • 82 سؤال',
+    available: true,
+    unitIds: [13, 14, 15, 16],
+  },
+  {
+    id: 'social',
+    name: 'الدراسات الاجتماعية',
+    icon: '🗺️',
+    desc: 'التاريخ • الجغرافيا • التربية الوطنية',
+    color: '#e65100',
+    shadow: 'rgba(230,81,0,.25)',
+    grad: 'linear-gradient(135deg,rgba(230,81,0,.18),rgba(230,81,0,.05))',
+    stats: '3 وحدات • 39 سؤال',
+    available: true,
+    unitIds: [10, 11, 12],
+  }
+]; // إغلاق كتالوج المواد
+
+/* ============================================================
+   RENDER SUBJECT SCREEN
+============================================================ */
+function renderSubjectScreen(){
+  // تحديث بيانات الطالب في الشريط العلوي
+  const barName = document.getElementById('subj-bar-name');
+  const barMeta = document.getElementById('subj-bar-meta');
+  if(barName) barName.textContent = '👤 ' + student.name;
+  if(barMeta) barMeta.textContent = 'الصف: ' + student.grade + ' | الشعبة: ' + student.section;
+
+  const grid = document.getElementById('subjects-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  let totalDone = 0, totalUnits = 0;
+
+  SUBJECTS_CATALOGUE.forEach((subj, idx) => {
+    const card = document.createElement('div');
+    card.className = 'subj-card ' + (subj.available ? 'available' : 'coming-soon');
+    card.style.setProperty('--subj-clr', subj.color);
+    card.style.setProperty('--subj-shadow', subj.shadow);
+    card.style.setProperty('--subj-grad', subj.grad);
+
+    // حساب تقدم الوحدات لهذه المادة
+    let doneCount = 0;
+    if(subj.available && subj.unitIds.length > 0){
+      totalUnits += subj.unitIds.length;
+      subj.unitIds.forEach(uid => {
+        if(unitScores[uid] !== null) { doneCount++; totalDone++; }
+      });
+    }
+
+    const hasDone = doneCount > 0;
+
+    card.innerHTML = `
+      ${!subj.available ? '<span class="coming-label">قريباً</span>' : ''}
+      ${hasDone ? `<div class="subj-done-badge">✓ ${doneCount}/${subj.unitIds.length}</div>` : ''}
+      <span class="subj-icon"><span class="subj-icon-el">${subj.icon}</span></span>
+      <div class="subj-name">${subj.name}</div>
+      <div class="subj-desc">${subj.desc}</div>
+      <div class="subj-stats"><span class="subj-stat">${subj.stats}</span></div>
+      ${subj.available ? `<button class="subj-enter-btn">ابدأ التدريب ←</button>` : ''}
+    `;
+
+    if(subj.available){
+      card.onclick = () => enterSubject(subj.id);
+    }
+
+    grid.appendChild(card);
+  });
+
+  // تحديث شريط التقدم الكلي
+  const pct = totalUnits > 0 ? Math.round(totalDone / totalUnits * 100) : 0;
+  const fillEl = document.getElementById('so-fill');
+  const pctEl = document.getElementById('so-pct');
+  const detEl = document.getElementById('so-detail');
+  if(fillEl) fillEl.style.width = pct + '%';
+  if(pctEl) pctEl.textContent = pct + '%';
+  if(detEl) detEl.textContent = totalDone > 0
+    ? `أنجزت ${totalDone} من ${totalUnits} وحدة`
+    : 'لم تبدأ أي وحدة بعد';
+}
+
+function enterSubject(subjId){
+  currentSubject = SUBJECTS_CATALOGUE.find(s => s.id === subjId);
+  if(!currentSubject) return;
+  applySubjectTheme(subjId);
+  renderUnitScreen();
+  hideAllScreens();
+  const us = document.getElementById('unit-screen');
+  if(us){ us.style.display='block'; us.classList.add('active'); }
+}
+
+function renderUnitScreen(){
+  // تطبيق ثيم المادة
+  if(currentSubject) applySubjectTheme(currentSubject.id);
+  if(!currentSubject) return;
+
+  const titleEl = document.getElementById('unit-screen-title');
+  const subjLabel = document.getElementById('unit-screen-subject-label');
+  if(titleEl) titleEl.textContent = '🗂️ وحدات ' + currentSubject.name;
+  if(subjLabel) subjLabel.textContent = currentSubject.name;
+
+  const barName = document.getElementById('bar-name');
+  const barMeta = document.getElementById('bar-meta');
+  if(barName) barName.textContent = '👤 ' + student.name;
+  if(barMeta) barMeta.textContent = 'الصف: ' + student.grade + ' | الشعبة: ' + student.section;
+
+  const container = document.getElementById('units-grid-container');
+  if(!container) return;
+  container.innerHTML = '';
+
+  const subjUnits = UNITS.filter(u => currentSubject.unitIds.includes(u.id));
+  const colors = ['u1','u2','u3','u1','u2','u3'];
+
+  subjUnits.forEach((unit, idx) => {
+    const sc = unitScores[unit.id];
+    const colorClass = colors[idx % colors.length];
+    const card = document.createElement('div');
+    card.className = 'unit-card ' + colorClass + (sc !== null ? ' completed' : '');
+
+    const mins = Math.floor((unit.timer||1200) / 60);
+    const qCount = (unit.questions||[]).length;
+
+    const attempts = getAttempts(unit.id);
+    const attCount = attempts.length;
+    const bestAtt = getBest(unit.id);
+    const trend = getTrend(unit.id);
+    const trendHtml = trend ? `<span style="font-size:.7rem;margin-right:6px">${trend==='up'?'⬆️':trend==='down'?'⬇️':'➡️'}</span>` : '';
+
+    card.innerHTML = `
+      ${sc !== null ? `<div class="unit-score-badge">${trendHtml}${sc}%</div>` : ''}
+      <span class="unit-icon">${unit.icon}</span>
+      <div class="unit-num">الوحدة ${idx + 1}</div>
+      <div class="unit-title">${unit.name}</div>
+      <div class="unit-meta">${qCount} سؤال • ${mins} دقيقة</div>
+      ${attCount > 0 ? `<div style="font-size:.73rem;color:rgba(255,255,255,.35);margin-bottom:6px">${attCount} محاولة${attCount>1?'':''}${bestAtt?' • أفضل: '+bestAtt.pct+'%':''}</div>` : ''}
+      <button class="unit-start-btn">${sc !== null ? '🔄 أعد التدريب' : '▶ ابدأ'}</button>
+    `;
+    card.onclick = () => startUnit(unit.id);
+    card.style.animation = `fadeInUp .5s cubic-bezier(.23,1,.32,1) ${idx * 0.08}s both`;
+    container.appendChild(card);
+  });
+
+  // التقدم الكلي للمادة
+  const done = currentSubject.unitIds.filter(uid => unitScores[uid] !== null).length;
+  const total = currentSubject.unitIds.length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  const obFill = document.getElementById('ob-fill');
+  const obPct = document.getElementById('ob-pct');
+  if(obFill) obFill.style.width = pct + '%';
+  if(obPct) obPct.textContent = pct + '%';
+}
+
+/* ============================================================
+   SUBJECT BACKGROUND THEMES
+============================================================ */
+const SUBJECT_THEMES = {
+  science: {
+    orb1: 'radial-gradient(circle,rgba(177,27,73,.18) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(13,115,119,.14) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 20% 20%,rgba(177,27,73,.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(13,115,119,.06) 0%,transparent 50%)',
+    particles: ['#B11B49','#ff6b9d','#0d7377','#14a085'],
+    emoji: ['🧬','🔬','🧪','⚗️','🦠','💊'],
+    headerGrad: 'linear-gradient(180deg,rgba(177,27,73,.18) 0%,transparent 100%)',
+    border: 'rgba(177,27,73,.3)'
+  },
+  math: {
+    orb1: 'radial-gradient(circle,rgba(13,115,119,.2) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(20,160,133,.12) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 15% 50%,rgba(13,115,119,.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 30%,rgba(20,160,133,.07) 0%,transparent 50%)',
+    particles: ['#0d7377','#14a085','#00bcd4','#26c6da'],
+    emoji: ['📐','📏','➕','➖','✖️','➗','∫','π'],
+    headerGrad: 'linear-gradient(180deg,rgba(13,115,119,.18) 0%,transparent 100%)',
+    border: 'rgba(13,115,119,.3)'
+  },
+  islamic: {
+    orb1: 'radial-gradient(circle,rgba(27,94,32,.2) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(46,125,50,.13) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 50% 10%,rgba(27,94,32,.1) 0%,transparent 55%),radial-gradient(ellipse at 30% 90%,rgba(201,150,58,.06) 0%,transparent 50%)',
+    particles: ['#1b5e20','#2e7d32','#C9963A','#ffd54f'],
+    emoji: ['🕌','📖','☪️','🌙','⭐','🤲'],
+    headerGrad: 'linear-gradient(180deg,rgba(27,94,32,.18) 0%,transparent 100%)',
+    border: 'rgba(27,94,32,.3)'
+  },
+  arabic: {
+    orb1: 'radial-gradient(circle,rgba(74,20,140,.22) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(123,31,162,.14) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 70% 20%,rgba(74,20,140,.1) 0%,transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(201,150,58,.05) 0%,transparent 50%)',
+    particles: ['#4a148c','#7b1fa2','#ab47bc','#ce93d8'],
+    emoji: ['✍️','📝','📜','🖊️','📚','💬'],
+    headerGrad: 'linear-gradient(180deg,rgba(74,20,140,.18) 0%,transparent 100%)',
+    border: 'rgba(74,20,140,.3)'
+  },
+  english: {
+    orb1: 'radial-gradient(circle,rgba(26,107,158,.2) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(13,79,119,.13) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 60% 30%,rgba(26,107,158,.09) 0%,transparent 55%),radial-gradient(ellipse at 40% 70%,rgba(13,79,119,.06) 0%,transparent 50%)',
+    particles: ['#1a6b9e','#0d4f77','#29b6f6','#81d4fa'],
+    emoji: ['🌐','🗣️','📖','✏️','🔤','💬'],
+    headerGrad: 'linear-gradient(180deg,rgba(26,107,158,.18) 0%,transparent 100%)',
+    border: 'rgba(26,107,158,.3)'
+  },
+  social: {
+    orb1: 'radial-gradient(circle,rgba(230,81,0,.2) 0%,transparent 70%)',
+    orb2: 'radial-gradient(circle,rgba(191,54,12,.13) 0%,transparent 70%)',
+    bg: 'radial-gradient(ellipse at 25% 25%,rgba(230,81,0,.1) 0%,transparent 55%),radial-gradient(ellipse at 75% 75%,rgba(201,150,58,.07) 0%,transparent 50%)',
+    particles: ['#e65100','#bf360c','#ff8f00','#ffca28'],
+    emoji: ['🗺️','🌍','🏛️','📜','⚔️','🕌'],
+    headerGrad: 'linear-gradient(180deg,rgba(230,81,0,.18) 0%,transparent 100%)',
+    border: 'rgba(230,81,0,.3)'
+  }
+};
+
+let particleInterval = null;
+
+function applySubjectTheme(subjId) {
+  const theme = SUBJECT_THEMES[subjId] || SUBJECT_THEMES.science;
+  const subjectLayer = document.getElementById('bg-subject-layer');
+  const header = document.querySelector('.top-header');
+
+  // إضافة class للـ body لتفعيل ثيم المادة على orbs
+  document.body.className = document.body.className.replace(/theme-\w+/g, '').trim();
+  document.body.classList.add('theme-' + subjId);
+
+  if(subjectLayer) {
+    subjectLayer.style.background = theme.bg;
+    subjectLayer.classList.add('active');
+  }
+  if(header) {
+    header.style.background = theme.headerGrad;
+    header.style.borderBottomColor = theme.border;
+  }
+
+  // تشغيل الجسيمات
+  startParticles(theme.particles, theme.emoji);
+}
+
+function startParticles(colors, emojis) {
+  clearInterval(particleInterval);
+  const container = document.getElementById('floating-particles');
+  if(!container) return;
+  container.innerHTML = '';
+
+  // جسيمات دائرية
+  for(let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 4 + Math.random() * 8;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      animation-duration:${8+Math.random()*14}s;
+      animation-delay:${Math.random()*8}s;
+      border-radius:50%;
+    `;
+    container.appendChild(p);
+  }
+
+  // إيموجي عائمة
+  emojis.forEach((em, i) => {
+    const e = document.createElement('div');
+    e.style.cssText = `
+      position:absolute;
+      font-size:${18+Math.random()*16}px;
+      left:${5 + Math.random()*90}%;
+      bottom:-40px;
+      animation:floatParticle ${10+Math.random()*10}s linear ${i*1.5}s infinite;
+      opacity:.25;
+      filter:blur(.5px);
+    `;
+    e.textContent = em;
+    container.appendChild(e);
+  });
+}
+
+function resetTheme() {
+  const subjectLayer = document.getElementById('bg-subject-layer');
+  const header = document.querySelector('.top-header');
+  if(subjectLayer) subjectLayer.classList.remove('active');
+  if(header) {
+    header.style.background = '';
+    header.style.borderBottomColor = '';
+  }
+  const container = document.getElementById('floating-particles');
+  if(container) container.innerHTML = '';
+}
+
+function goToSubjects() {
+    const n = document.getElementById('sname').value.trim();
+    const g = document.getElementById('sgrade').value;
+    const sec = document.getElementById('ssection').value;
+
+    if(!student.name){ // أول دخول — تحقق من البيانات
+      if (!n || !g || !sec) {
+        alert('يرجى إكمال البيانات أولاً');
+        return;
+      }
+      student = { name: n, grade: g, section: sec };
+      // حفظ الطالب لاستعادته في الجلسة القادمة
+      saveLastStudent(n, g, sec);
+      // استعادة درجاته السابقة إن وُجدت
+      restoreUnitScores();
+      // إرسال بيانات التسجيل لجوجل شيت
+      sendRegistrationToSheets(n, g, sec);
+    }
+
+    resetTheme();
+    hideAllScreens();
+    const subjectScreen = document.getElementById('subject-screen');
+    if(subjectScreen){ subjectScreen.style.display='block'; subjectScreen.classList.add('active'); }
+    renderSubjectScreen();
+}
+
+async function sendRegistrationToSheets(name, grade, section) {
+  if(!SCRIPT_URL) return;
+  try {
+    const regParams = new URLSearchParams({
+      type    : 'registration',
+      name    : name,
+      grade   : grade,
+      section : section,
+      date    : new Date().toLocaleString('ar-SA', {timeZone:'Asia/Qatar'})
+    });
+    await fetch(SCRIPT_URL + '?' + regParams.toString(), {
+      method : 'GET',
+      mode   : 'no-cors'
+    });
+  } catch(e) { console.warn('Reg sheet sync failed:', e); }
+}
+/* ============================================================
+   START UNIT
+============================================================ */
+function startUnit(unitId){
+  const unit = UNITS.find(u => u.id === unitId);
+  if(!unit) return;
+  currentUnit = unit;
+  answers = {};
+
+  hideAllScreens();
+  const qs = document.getElementById('quiz-screen');
+  if(qs){ qs.style.display='block'; qs.classList.add('active'); }
+
+  renderQuiz(unit);
+  startTimer(unit.timer || 1200);
+}
+
+function renderQuiz(unit){
+  const qs = document.getElementById('quiz-screen');
+  if(!qs) return;
+
+  // ── ضبط اتجاه الكتابة حسب لغة الوحدة ──
+  const isLTR = unit.dir === 'ltr';
+  qs.style.direction = isLTR ? 'ltr' : 'rtl';
+  qs.className = isLTR ? 'english-quiz' : '';
+
+  const questions = unit.questions || [];
+  // تجميع الأسئلة حسب القسم
+  const sections = {};
+  questions.forEach((q, i) => {
+    const sec = q.s || 'عام';
+    if(!sections[sec]) sections[sec] = [];
+    sections[sec].push({...q, globalIdx: i});
+  });
+
+  let html = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <button class="back-btn" onclick="backToUnits()">← الوحدات</button>
+      <div style="font-size:.9rem;color:rgba(255,255,255,.45)">${unit.icon} ${unit.name}</div>
+    </div>
+    <div class="qprog-wrap">
+      <div class="qprog-label"><span>التقدم</span><span id="q-counter">0 / ${questions.length}</span></div>
+      <div class="qprog-bar"><div class="qprog-fill" id="qprog-fill" style="width:0%"></div></div>
+    </div>
+  `;
+
+  Object.entries(sections).forEach(([secName, qs]) => {
+    const qCount = qs.length;
+    const countLabel = isLTR ? `${qCount} Q` : `${qCount} سؤال`;
+    const qLabel = isLTR ? '' : 'سؤال ';
+    html += `<div class="sect-header" style="direction:${isLTR?'ltr':'rtl'};text-align:${isLTR?'left':'right'}"><span class="sect-header-icon">📌</span><span class="sect-header-text">${secName}</span><span class="sect-header-count">${countLabel}</span></div>`;
+
+    // ── عرض نص القراءة مرة واحدة لكل قسم (إن وُجد) ──
+    const firstQ = qs[0];
+    if(firstQ && firstQ.passage) {
+      const passId = 'pass-' + secName.replace(/\s+/g, '-').replace(/[^a-z0-9-]/gi,'');
+      // تقسيم النص لفقرات
+      const paragraphs = firstQ.passage.split('\n\n').map((p, pi) =>
+        `<p><span style="color:rgba(255,255,255,.35);font-size:.75rem;font-weight:700;margin-left:-2px">(${pi+1}) </span>${p.trim()}</p>`
+      ).join('');
+      html += `
+        <div class="passage-block">
+          <div class="passage-label">📄 Reading Passage</div>
+          <div class="passage-text" id="${passId}">${paragraphs}</div>
+          <button class="passage-toggle" onclick="togglePassage('${passId}',this)">Show less ▲</button>
+        </div>
+      `;
+    }
+
+    qs.forEach((q, li) => {
+      const gi = q.globalIdx;
+      const qDir = (q.dir || (isLTR ? 'ltr' : 'rtl'));
+      const isReadingQ = !!q.passage;
+      html += `
+        <div class="qcard ${isReadingQ ? 'reading-qcard' : ''}" id="qcard-${gi}" style="direction:${qDir};text-align:${qDir==='ltr'?'left':'right'}">
+          <div class="qnum" style="direction:${qDir};text-align:${qDir==='ltr'?'left':'right'}">${qLabel}${gi+1}</div>
+          <div class="qtext" style="direction:${qDir};text-align:${qDir==='ltr'?'left':'right'};white-space:pre-line">${q.q}${q.img ? `<img src="data:image/png;base64,${q.img}" style="max-width:280px;width:100%;margin:12px auto 4px;display:block;border-radius:10px;background:rgba(255,255,255,.97);padding:10px;box-shadow:0 4px 20px rgba(0,0,0,.35);" />` : ''}</div>
+          <div class="opts">
+            ${q.opts.map((opt, oi) => `
+              <div class="opt" id="opt-${gi}-${oi}" onclick="selectOpt(${gi},${oi})" style="direction:${qDir};text-align:${qDir==='ltr'?'left':'right'}">
+                <div class="opt-radio"></div>
+                <span>${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+  });
+
+  html += `
+    <div class="submit-wrap">
+      <div id="warn-msg">⚠️ يرجى الإجابة على جميع الأسئلة أولاً</div>
+      <button class="submit-btn" onclick="submitQuiz()">✅ إرسال الإجابات</button>
+    </div>
+  `;
+  qs.innerHTML = html;
+
+  // تحديث شريط التايمر
+  const tb = document.getElementById('timer-bar');
+  const tut = document.getElementById('timer-unit-tag');
+  if(tb) tb.classList.add('show');
+  if(tut) tut.textContent = unit.name;
+}
+
+function selectOpt(qi, oi){
+  const q = currentUnit.questions[qi];
+  if(!q) return;
+  answers[qi] = oi;
+
+  // إلغاء تحديد الخيارات السابقة
+  q.opts.forEach((_, idx) => {
+    const el = document.getElementById(`opt-${qi}-${idx}`);
+    if(el) el.classList.remove('selected');
+  });
+  const sel = document.getElementById(`opt-${qi}-${oi}`);
+  if(sel) sel.classList.add('selected');
+
+  const card = document.getElementById(`qcard-${qi}`);
+  if(card) card.classList.add('answered');
+
+  // تحديث شريط التقدم
+  const total = currentUnit.questions.length;
+  const done = Object.keys(answers).length;
+  const fill = document.getElementById('qprog-fill');
+  const counter = document.getElementById('q-counter');
+  if(fill) fill.style.width = (done/total*100) + '%';
+  if(counter) counter.textContent = done + ' / ' + total;
+}
+
+/* ============================================================
+   SUBMIT & RESULT
+============================================================ */
+function submitQuiz(){
+  const unit = currentUnit;
+  const questions = unit.questions || [];
+  const unanswered = questions.filter((_, i) => answers[i] === undefined);
+
+  if(unanswered.length > 0){
+    const wm = document.getElementById('warn-msg');
+    if(wm){ wm.style.display='block'; setTimeout(()=>wm.style.display='none', 3000); }
+    // التمرير لأول سؤال بدون إجابة
+    const firstUnanswered = questions.findIndex((_, i) => answers[i] === undefined);
+    const el = document.getElementById(`qcard-${firstUnanswered}`);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  clearInterval(timerInterval);
+  const elapsed = (unit.timer||1200) - (timeLeft||0);
+
+  // حساب النتيجة
+  let correct = 0;
+  const details = questions.map((q, i) => {
+    const isCorrect = answers[i] === q.ans;
+    if(isCorrect) correct++;
+    return { q: q.q, chosen: answers[i], correct: q.ans, ok: isCorrect, opts: q.opts, s: q.s };
+  });
+
+  const pct = Math.round(correct / questions.length * 100);
+  // تحديث unitScores: احتفظ بأعلى درجة أو الدرجة الجديدة إذا لم تكن هناك سابقة
+  const prevBest = unitScores[unit.id];
+  unitScores[unit.id] = (prevBest === null) ? pct : Math.max(prevBest, pct);
+
+  const attempt = { pct, correct, total: questions.length, elapsed, date: new Date().toISOString() };
+  saveAttemptToLS(unit.id, attempt);
+
+  showResult(unit, correct, questions.length, pct, elapsed, details);
+}
+
+function showResult(unit, correct, total, pct, elapsed, details){
+  hideAllScreens();
+  const rs = document.getElementById('result-screen');
+  if(rs){ rs.style.display='block'; rs.classList.add('active'); }
+
+  const emoji = pct >= 90 ? '🏆' : pct >= 75 ? '🌟' : pct >= 60 ? '👍' : '💪';
+  const msg   = pct >= 90 ? 'ممتاز! أداء رائع' : pct >= 75 ? 'جيد جداً' : pct >= 60 ? 'جيد، استمر' : 'تحتاج مزيداً من التدريب';
+  const mins = Math.floor(elapsed/60), secs = elapsed%60;
+  // أفضل درجة للوحدة الحالية (محفوظة بعد الحفظ)
+  const allAttempts = getAttempts(currentUnit.id);
+  const bestPct = allAttempts.length ? Math.max(...allAttempts.map(a=>a.pct)) : pct;
+  const attemptNum = allAttempts.length;
+  const prevBest = allAttempts.length > 1 ? Math.max(...allAttempts.slice(0,-1).map(a=>a.pct)) : null;
+  const improved = prevBest !== null && pct > prevBest;
+
+  let detailHtml = details.map((d, i) => `
+    <div style="background:${d.ok?'rgba(27,138,74,.08)':'rgba(198,40,40,.08)'};border:1px solid ${d.ok?'rgba(27,138,74,.3)':'rgba(198,40,40,.3)'};border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:5px">📌 ${d.s}</div>
+      <div style="font-size:.9rem;color:rgba(255,255,255,.85);margin-bottom:10px;line-height:1.7">${i+1}. ${d.q}</div>
+      ${d.opts.map((opt, oi) => `
+        <div style="padding:7px 12px;border-radius:8px;font-size:.85rem;margin-bottom:5px;
+          background:${oi===d.correct?'rgba(27,138,74,.2)':oi===d.chosen&&!d.ok?'rgba(198,40,40,.2)':'rgba(255,255,255,.03)'};
+          border:1px solid ${oi===d.correct?'rgba(27,138,74,.5)':oi===d.chosen&&!d.ok?'rgba(198,40,40,.4)':'rgba(255,255,255,.07)'};
+          color:${oi===d.correct?'#81c784':oi===d.chosen&&!d.ok?'#ff8a80':'rgba(255,255,255,.6)'}">
+          ${oi===d.correct?'✓ ':oi===d.chosen&&!d.ok?'✗ ':''}${opt}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  rs.innerHTML = `
+    <div class="rcard">
+      <span class="rtrophy spin">${emoji}</span>
+      <div class="rname">${student.name}</div>
+      <div class="rinfo">الصف ${student.grade} | الشعبة ${student.section}</div>
+      <div class="score-wrap">
+        <div class="score-circle">
+          <span class="snum">${correct}</span>
+          <span class="sout">من ${total}</span>
+        </div>
+      </div>
+      <div style="font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:6px">${pct}%</div>
+      <div style="font-size:1rem;color:rgba(255,255,255,.6);margin-bottom:18px">${msg}</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
+        <div class="score-chip ${pct>=80?'done':''}"><strong>${correct}/${total}</strong>إجابات صحيحة</div>
+        <div class="score-chip"><strong>${mins}:${String(secs).padStart(2,'0')}</strong>الوقت المستغرق</div>
+        <div class="score-chip"><strong>${pct}%</strong>هذه المحاولة</div>
+        ${attemptNum > 1 ? `<div class="score-chip ${bestPct>=80?'done':''}"><strong>${bestPct}%</strong>أفضل درجة</div>` : ''}
+        <div class="score-chip" style="background:rgba(26,107,158,.15);border-color:rgba(26,107,158,.3)"><strong>#${attemptNum}</strong>رقم المحاولة</div>
+      </div>
+      ${improved ? `<div style="background:rgba(27,138,74,.15);border:1px solid rgba(27,138,74,.35);border-radius:12px;padding:10px 16px;margin-bottom:16px;text-align:center;font-size:.9rem;color:#81c784;font-weight:700">🎉 تحسّنت! كانت أفضل درجتك ${prevBest}% والآن ${pct}%</div>` : ''}
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
+        <button onclick="startUnit(currentUnit.id)" style="padding:10px 22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;color:#fff;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem">🔄 أعد المحاولة</button>
+        <button onclick="backToUnits()" style="padding:10px 22px;background:rgba(177,27,73,.25);border:1px solid rgba(177,27,73,.4);border-radius:12px;color:#fff;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem">← الوحدات</button>
+        <button onclick="goToSubjects()" style="padding:10px 22px;background:rgba(13,115,119,.25);border:1px solid rgba(13,115,119,.4);border-radius:12px;color:#fff;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:.9rem">🏠 المواد</button>
+      </div>
+      <div style="text-align:right;margin-bottom:12px;font-size:.85rem;color:rgba(255,255,255,.5);font-weight:700">📋 مراجعة الإجابات</div>
+      ${detailHtml}
+    </div>
+  `;
+
+  if(pct >= 70) launchConfetti();
+  // ── إرسال النتيجة لجوجل شيت ──
+  sendToGoogleSheets(unit, pct, correct, questions.length, elapsed);
+}
+
+async function sendToGoogleSheets(unit, pct, correct, total, elapsed) {
+  if(!SCRIPT_URL) return;
+  try {
+    const params = new URLSearchParams({
+      type    : 'quiz_result',
+      name    : student.name,
+      grade   : student.grade,
+      section : student.section,
+      subject : unit.subject || '',
+      unit    : unit.name,
+      score   : String(correct),
+      total   : String(total),
+      elapsed : String(elapsed),
+      bySubj  : '{}'
+    });
+    // استخدام GET مع URL params — يعمل مع no-cors بدون قيود
+    await fetch(SCRIPT_URL + '?' + params.toString(), {
+      method : 'GET',
+      mode   : 'no-cors'
+    });
+  } catch(e) {
+    console.warn('Sheet sync failed:', e);
+  }
+}
+
+/* ============================================================
+   TIMER
+============================================================ */
+function startTimer(seconds){
+  clearInterval(timerInterval);
+  timeLeft = seconds;
+  startTime = Date.now();
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const unit = currentUnit;
+  const total = (unit&&unit.timer)||1200;
+  const mins = Math.floor(timeLeft/60);
+  const secs = timeLeft%60;
+  const disp = document.getElementById('timer-display');
+  const fill = document.getElementById('timer-fill');
+  if(disp){
+    disp.textContent = `${mins}:${String(secs).padStart(2,'0')}`;
+    disp.className = timeLeft <= 60 ? 'danger' : timeLeft <= 180 ? 'warn' : '';
+  }
+  if(fill){
+    const pct = Math.max(0, timeLeft/total*100);
+    fill.style.width = pct + '%';
+    fill.className = 'tfill' + (timeLeft<=60?' danger':timeLeft<=180?' warn':'');
+  }
+}
+
+/* ============================================================
+   NAVIGATION HELPERS
+============================================================ */
+function backToUnits(){
+  clearInterval(timerInterval);
+  const tb = document.getElementById('timer-bar');
+  if(tb) tb.classList.remove('show');
+  hideAllScreens();
+  const us = document.getElementById('unit-screen');
+  if(us){ us.style.display='block'; us.classList.add('active'); }
+  renderUnitScreen();
+}
+
+function showFinalSummary(){
+  goToSubjects();
+}
+
+function closeCompare(){
+  const cm = document.getElementById('compare-modal');
+  if(cm) cm.classList.remove('show');
+}
+
+function retrySave(){
+  // إعادة المحاولة — يمكن تطويرها لاحقاً
+  const so = document.getElementById('saving-overlay');
+  if(so) so.classList.remove('show');
+}
+
+/* ============================================================
+   CONFETTI
+============================================================ */
+function togglePassage(id, btn) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  if(el.classList.contains('collapsed')) {
+    el.classList.remove('collapsed');
+    btn.textContent = 'Show less ▲';
+  } else {
+    el.classList.add('collapsed');
+    btn.textContent = 'Show more ▼';
+  }
+}
+
+function launchConfetti(){
+  const colors=['#B11B49','#C9963A','#0d7377','#1a6b9e','#fff'];
+  for(let i=0;i<40;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.5}s;transform:rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),4000);
+    },i*40);
+  }
+}
+
+
+/* ============================================================
+   INIT — التشغيل الأولي عند تحميل الصفحة
+============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  const last = loadLastStudent();
+  if(last && last.name){
+    // طالب عائد — استعد بياناته
+    student = { name: last.name, grade: last.grade, section: last.section };
+    restoreUnitScores();
+    renderResumeScreen();
+  } else {
+    // طالب جديد — اعرض شاشة التسجيل
+    showScreen('entry-screen');
+  }
+});
+
+</script>
+</body>
+</html>
