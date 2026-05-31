@@ -1757,6 +1757,7 @@ function renderResumeScreen(){
 
       <div class="new-student-form" id="new-student-form">
         <div class="form-group"><label>👤 الاسم الكامل</label><input type="text" id="sname2" placeholder="أدخل اسمك الكامل" maxlength="80"/></div>
+        <div class="form-group" style="margin-top:10px"><label>🪪 رقم الطالب</label><input type="text" id="sstudentid2" placeholder="مثال: 20241234" maxlength="20" inputmode="numeric"/></div>
         <div class="form-group" style="margin-top:10px"><label>📚 الصف</label>
           <select id="sgrade2"><option value="">-- اختر الصف --</option><option value="التاسع">التاسع</option></select>
         </div>
@@ -1797,15 +1798,16 @@ function toggleNewStudentForm(){
 }
 
 function switchStudent(){
-  const n = document.getElementById('sname2')?.value.trim();
-  const g = document.getElementById('sgrade2')?.value;
+  const n   = document.getElementById('sname2')?.value.trim();
+  const sid = document.getElementById('sstudentid2')?.value.trim() || '';
+  const g   = document.getElementById('sgrade2')?.value;
   const sec = document.getElementById('ssection2')?.value;
   if(!n || !g || !sec){ alert('يرجى إكمال البيانات'); return; }
-  student = { name: n, grade: g, section: sec };
+  student = { name: n, grade: g, section: sec, studentId: sid };
   unitScores = new Array(30).fill(null);
   restoreUnitScores();
-  saveLastStudent(n, g, sec);
-  sendRegistrationToSheets(n, g, sec);
+  saveLastStudent(n, g, sec, sid);
+  sendRegistrationToSheets(n, g, sec, sid);
   continueSession();
 }
 
@@ -2194,17 +2196,18 @@ function goToSubjects() {
 async function sendRegistrationToSheets(name, grade, section, studentId) {
   if(!SCRIPT_URL) return;
   try {
-    const regParams = new URLSearchParams({
-      type    : 'registration',
-      name    : name,
-      grade   : grade,
-      section : section,
-      studentId: studentId || '',
-      date    : new Date().toLocaleString('ar-SA', {timeZone:'Asia/Qatar'})
-    });
-    await fetch(SCRIPT_URL + '?' + regParams.toString(), {
-      method : 'GET',
-      mode   : 'no-cors'
+    const payload = {
+      type      : 'registration',
+      name      : name,
+      grade     : grade,
+      section   : section,
+      studentId : studentId || '',
+      date      : new Date().toLocaleString('ar-SA', {timeZone:'Asia/Qatar'})
+    };
+    await fetch(SCRIPT_URL, {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload)
     });
   } catch(e) { console.warn('Reg sheet sync failed:', e); }
 }
